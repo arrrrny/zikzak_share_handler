@@ -1,3 +1,5 @@
+# 0.0.23
+Updated ReadME
 # 0.0.22
 IOS -Fixed IOS 18 not working due to UIApplication.openURL is deprecated, bumped compileSDK to 34
 # 0.0.21

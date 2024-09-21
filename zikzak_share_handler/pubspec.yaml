@@ -1,7 +1,7 @@
 name: zikzak_share_handler
 description: A Flutter plugin to handle incoming shared text/media, as well as add share to suggestions/shortcuts.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler
-version: 0.0.22
+version: 0.0.23
 
 environment:
   sdk: ">=2.14.0 <4.0.0"

@@ -2,6 +2,8 @@
 
 A Flutter plugin for iOS and Android to handle incoming shared text/media, as well as add share to suggestions/shortcuts.
 
+This package is the fork of the package [share_handler](https://pub.dev/packages/share_handler)
+
 ## Installation
 
 First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
@@ -352,5 +354,5 @@ class _MyAppState extends State<MyApp> {
 
 ## Attributions
 This package is the fork of the share_handler package https://pub.dev/packages/share_handler In the emergency case of the original package not working on IOS, I decided to  fork it and make the necessary changes to make it work on IOS. The original package is maintained by  https://github.com/ShoutSocial
- 
+
 Special thanks to the contributors of the receive_sharing_intent package from which I garnered a lot of code/logic and built thereon - https://github.com/KasemJaffer/receive_sharing_intent. It seemed to not be maintained and not responsive to issues/feature requests, hence the new package.
