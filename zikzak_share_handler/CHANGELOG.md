@@ -1,3 +1,5 @@
+# 0.0.24
+Updated podspec to match correct version of the library.
 # 0.0.23
 Updated ReadME
 # 0.0.22

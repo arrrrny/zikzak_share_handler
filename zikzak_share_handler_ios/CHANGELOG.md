@@ -1,3 +1,6 @@
+# 0.0.16
+Updated podspec to match correct version of the library.
+
 # 0.0.15
 Fix for IOS 18 not opening due to UIApplication.openURL is deprecated Thx to dbrpci
 
