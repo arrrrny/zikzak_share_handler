@@ -1,3 +1,5 @@
+# 0.0.12
+Updated package dependency
 # 0.0.11
 Package renaming
 # 0.0.10

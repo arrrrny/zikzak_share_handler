@@ -122,7 +122,7 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
         <string>com.apple.share-services</string>
     </dict>
 </dict>
-</plist> 
+</plist>
 ```
 
 4. Add a group identifier to both the Runner and ShareExtension Targets
@@ -153,11 +153,11 @@ target 'Runner' do
 end
 ```
 
-7. In Xcode, replace the contents of ShareExtension/ShareViewController.swift with the following code. The share extension doesn't launch a UI of its own, instead it serializes the shared content/media and saves it to the groups shared preferences, then opens a deep link into the full app so your flutter/dart code can then read the serialized data and handle it accordingly. 
+7. In Xcode, replace the contents of ShareExtension/ShareViewController.swift with the following code. The share extension doesn't launch a UI of its own, instead it serializes the shared content/media and saves it to the groups shared preferences, then opens a deep link into the full app so your flutter/dart code can then read the serialized data and handle it accordingly.
 
 ```swift
 import zikzak_share_handler_ios_models
-    
+
 class ShareViewController: ShareHandlerIosViewController {}
 ```
 
@@ -353,6 +353,6 @@ class _MyAppState extends State<MyApp> {
 ```
 
 ## Attributions
-This package is the fork of the share_handler package https://pub.dev/packages/share_handler In the emergency case of the original package not working on IOS, I decided to  fork it and make the necessary changes to make it work on IOS. The original package is maintained by  https://github.com/ShoutSocial
+This package is the fork of the share_handler package https://pub.dev/packages/share_handler In the emergency case of the original package not working on IOS, I decided to  fork it and make the necessary changes to make it work on IOS. The original package is maintained by  https://github.com/arrrrny
 
 Special thanks to the contributors of the receive_sharing_intent package from which I garnered a lot of code/logic and built thereon - https://github.com/KasemJaffer/receive_sharing_intent. It seemed to not be maintained and not responsive to issues/feature requests, hence the new package.

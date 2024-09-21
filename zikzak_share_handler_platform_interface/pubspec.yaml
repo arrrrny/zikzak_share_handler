@@ -1,7 +1,7 @@
 name: zikzak_share_handler_platform_interface
 description: A common platform interface for the zikzak_share_handler plugin.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_platform_interface
-version: 0.0.6
+version: 0.0.7
 
 environment:
   sdk: ">=2.14.0 <4.0.0"

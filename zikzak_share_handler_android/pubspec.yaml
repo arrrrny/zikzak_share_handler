@@ -1,7 +1,7 @@
 name: zikzak_share_handler_android
 description: An implementation for the Android platform of the Flutter zikzak_share_handler plugin.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_android
-version: 0.0.11
+version: 0.0.12
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  zikzak_share_handler_platform_interface: ^0.0.6
+  zikzak_share_handler_platform_interface: ^0.0.7
   # zikzak_share_handler_platform_interface:
   #   path: ../zikzak_share_handler_platform_interface
 

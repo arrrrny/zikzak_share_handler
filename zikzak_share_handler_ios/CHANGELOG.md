@@ -1,3 +1,6 @@
+# 0.0.17
+Fix bug in event method
+
 # 0.0.16
 Updated podspec to match correct version of the library.
 
