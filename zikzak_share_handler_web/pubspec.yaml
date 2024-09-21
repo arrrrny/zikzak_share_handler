@@ -1,0 +1,27 @@
+name: zikzak_share_handler_web
+description: An implementation for the Web platform of the Flutter zikzak_share_handler plugin.
+repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_platform_web
+version: 0.0.1
+
+environment:
+  sdk: ">=2.14.0 <4.0.0"
+  flutter: ">=2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  zikzak_share_handler_platform_interface: ^0.0.6
+
+dev_dependencies:
+  flutter_lints:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: ShareHandlerWebPlatform
+        fileName: zikzak_share_handler_web.dart

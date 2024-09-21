@@ -1,0 +1,52 @@
+name: zikzak_share_handler
+description: A Flutter plugin to handle incoming shared text/media, as well as add share to suggestions/shortcuts.
+repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler
+version: 0.0.22
+
+environment:
+  sdk: ">=2.14.0 <4.0.0"
+  flutter: ">=2.0.0"
+
+flutter:
+  plugin:
+    platforms: 
+      android:
+        default_package: zikzak_share_handler_android 
+      ios:
+        default_package: zikzak_share_handler_ios 
+      # linux:
+      #   default_package: zikzak_share_handler_linux 
+      # macos:
+      #   default_package: zikzak_share_handler_macos 
+      # web:
+      #   default_package: zikzak_share_handler_web 
+      # windows:
+      #   default_package: zikzak_share_handler_windows 
+
+dependencies:
+  flutter:
+    sdk: flutter
+  zikzak_share_handler_android: ^0.0.11
+  # zikzak_share_handler_android:
+  #   path: ../zikzak_share_handler_android
+  zikzak_share_handler_ios: ^0.0.15
+  # zikzak_share_handler_ios:
+  #   path: ../zikzak_share_handler_ios
+  # zikzak_share_handler_linux:
+  #   path: ../zikzak_share_handler_linux 
+  # zikzak_share_handler_macos:
+  #   path: ../zikzak_share_handler_macos 
+  # zikzak_share_handler_web:
+  #   path: ../zikzak_share_handler_web 
+  # zikzak_share_handler_windows:
+  #   path: ../zikzak_share_handler_windows 
+  zikzak_share_handler_platform_interface: ^0.0.6
+  # zikzak_share_handler_platform_interface:
+  #   path: ../zikzak_share_handler_platform_interface
+
+dev_dependencies:
+  flutter_lints:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^0.1.4
+  plugin_platform_interface: ^2.0.1

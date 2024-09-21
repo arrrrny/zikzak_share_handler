@@ -1,6 +1,0 @@
-package com.shoutsocial.share_handler_android_example
-
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-}
