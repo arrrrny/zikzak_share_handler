@@ -1,7 +1,7 @@
 name: zikzak_share_handler
 description: A Flutter plugin to handle incoming shared text/media, as well as add share to suggestions/shortcuts.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler
-version: 0.0.25
+version: 0.0.26
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -9,19 +9,19 @@ environment:
 
 flutter:
   plugin:
-    platforms: 
+    platforms:
       android:
-        default_package: zikzak_share_handler_android 
+        default_package: zikzak_share_handler_android
       ios:
-        default_package: zikzak_share_handler_ios 
+        default_package: zikzak_share_handler_ios
       # linux:
-      #   default_package: zikzak_share_handler_linux 
+      #   default_package: zikzak_share_handler_linux
       # macos:
-      #   default_package: zikzak_share_handler_macos 
+      #   default_package: zikzak_share_handler_macos
       # web:
-      #   default_package: zikzak_share_handler_web 
+      #   default_package: zikzak_share_handler_web
       # windows:
-      #   default_package: zikzak_share_handler_windows 
+      #   default_package: zikzak_share_handler_windows
 
 dependencies:
   flutter:
@@ -33,13 +33,13 @@ dependencies:
   # zikzak_share_handler_ios:
   #   path: ../zikzak_share_handler_ios
   # zikzak_share_handler_linux:
-  #   path: ../zikzak_share_handler_linux 
+  #   path: ../zikzak_share_handler_linux
   # zikzak_share_handler_macos:
-  #   path: ../zikzak_share_handler_macos 
+  #   path: ../zikzak_share_handler_macos
   # zikzak_share_handler_web:
-  #   path: ../zikzak_share_handler_web 
+  #   path: ../zikzak_share_handler_web
   # zikzak_share_handler_windows:
-  #   path: ../zikzak_share_handler_windows 
+  #   path: ../zikzak_share_handler_windows
   zikzak_share_handler_platform_interface: ^0.0.7
   # zikzak_share_handler_platform_interface:
   #   path: ../zikzak_share_handler_platform_interface

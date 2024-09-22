@@ -1,3 +1,6 @@
+# 0.0.26
+Updated IOS setup instructions
+
 # 0.0.25
 Updated package dependencies
 # 0.0.24
@@ -12,7 +15,7 @@ Android - Add namespace to allow for Gradle 8
 # 0.0.20
 iOS - Fix for iOS 14 deprecation when recording a sent message with INSendMessageIntent
 # 0.0.19
-iOS - Don't show default share modal and go straight to redirect to flutter app 
+iOS - Don't show default share modal and go straight to redirect to flutter app
 # 0.0.18
 Support handling a shared contact card (vcf) on iOS
 # 0.0.17
