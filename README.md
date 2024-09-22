@@ -15,11 +15,11 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
 Before running pod install make sure to
 
 Convert Share Extension to Group
-![Group Share Extension](setup_images/convert_to_group.png)
+![Group Share Extension](setup_images/convert.png)
 
 Move Thin Library to the bottom of the build phase
 
-![Arrange Build Phases](setup_images/thin_library.png)
+![Arrange Build Phases](setup_images/thin.png)
 
 Update the ios/Runner/Release.xcconfig file as below:
 
