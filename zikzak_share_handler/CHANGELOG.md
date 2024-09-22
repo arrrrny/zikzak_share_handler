@@ -1,3 +1,5 @@
+# 0.0.30
+Updated README
 # 0.0.29
 Updated IOS setup instructions
 # 0.0.28

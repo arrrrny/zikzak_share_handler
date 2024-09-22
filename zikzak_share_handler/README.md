@@ -167,11 +167,11 @@ Before running pod install make sure to
 
 Convert Share Extension to Group
 
-![Group Share Extension](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/convert.png)
+![Group Share Extension](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/convert.png)
 
 Move Thin Library to the bottom of the build phase
 
-![Arrange Build Phases](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/thin.png)
+![Arrange Build Phases](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/thin.png)
 
 Update the ios/Runner/Release.xcconfig file as below:
 
@@ -190,12 +190,12 @@ Update the ios/Runner/Debug.xcconfig file as below:
 ```
 If you receive the below warning
 
-![Warning](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/warning.png)
+![Warning](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/warning.png)
 
 Update the Build setting CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER for ShareExtension to '$(inherited)':
 It will set the value to $(inherited) for the ShareExtension target to 'No'.
 
-![Build Setting](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/fix.png)
+![Build Setting](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/fix.png)
 
 
 ### Android
@@ -390,6 +390,11 @@ class _MyAppState extends State<MyApp> {
 ```
 
 ## Attributions
-This package is the fork of the share_handler package https://pub.dev/packages/share_handler In the emergency case of the original package not working on IOS, I decided to  fork it and make the necessary changes to make it work on IOS.
+This package is the fork of the share_handler package https://pub.dev/packages/share_handler
 
-Special thanks to the contributors of the receive_sharing_intent package from which I garnered a lot of code/logic and built thereon - https://github.com/KasemJaffer/receive_sharing_intent. It seemed to not be maintained and not responsive to issues/feature requests, hence the new package.
+In the emergency case of the original package not working on IOS 18, I decided to  fork it and make the necessary changes to make it work on IOS 18 and Xcode 16.
+
+Special thanks to the original author of the share_handler package - https://github.com/JoshJuncker and the contributors of the share_handler package https://github.com/ShoutSocial/share_handler
+Special thanks to the contributors of the receive_sharing_intent package from which previous author garnered a lot of code/logic and built thereon - https://github.com/KasemJaffer/receive_sharing_intent.
+
+It seemed to not be maintained and not responsive to issues/feature requests, hence the new package again.
