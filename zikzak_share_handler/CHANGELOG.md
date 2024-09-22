@@ -1,3 +1,5 @@
+# 0.0.28
+Updated IOS setup instructions
 # 0.0.27
 Updated IOS setup instructions
 # 0.0.26

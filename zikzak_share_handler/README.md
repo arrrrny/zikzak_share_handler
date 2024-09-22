@@ -16,11 +16,11 @@ Before running pod install make sure to
 
 Convert Share Extension to Group
 
-![Group Share Extension](../setup_images/convert.png)
+![Group Share Extension](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/convert.png)
 
 Move Thin Library to the bottom of the build phase
 
-![Arrange Build Phases](../setup_images/thin.png)
+![Arrange Build Phases](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/thin.png)
 
 Update the ios/Runner/Release.xcconfig file as below:
 
