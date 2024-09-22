@@ -263,8 +263,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:zikzak_share_handler_platform_interface/messages.dart';
-import 'package:zikzak_share_handler_platform_interface/zikzak_share_handler_platform_interface.dart';
+import 'package:zikzak_share_handler/zikzak_share_handler.dart';
+
 
 void main() {
   runApp(const MyApp());
