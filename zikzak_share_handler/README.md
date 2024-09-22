@@ -10,35 +10,6 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
 
 ### iOS
 
-#### Xcode 16 IOS 18 IMPORTANT!
-
-Before running pod install make sure to
-
-Convert Share Extension to Group
-
-![Group Share Extension](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/convert.png)
-
-Move Thin Library to the bottom of the build phase
-
-![Arrange Build Phases](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/thin.png)
-
-Update the ios/Runner/Release.xcconfig file as below:
-
-```bash
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
-#include "Generated.xcconfig"
-```
-
-Update the ios/Runner/Debug.xcconfig file as below:
-
-```bash
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
-#include "Generated.xcconfig"
-```
-
-
 1. Add the following to `<project root>/ios/Runner/Info.plist`. It registers your app to open via a deep link that will be launched from the Share Extension. Also, for sharing photos, you will need access to the photo library.
 
 ```xml
@@ -189,6 +160,43 @@ import zikzak_share_handler_ios_models
 
 class ShareViewController: ShareHandlerIosViewController {}
 ```
+
+### Xcode 16 and IOS Trouble Shooting
+
+Before running pod install make sure to
+
+Convert Share Extension to Group
+
+![Group Share Extension](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/convert.png)
+
+Move Thin Library to the bottom of the build phase
+
+![Arrange Build Phases](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/thin.png)
+
+Update the ios/Runner/Release.xcconfig file as below:
+
+```bash
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
+#include "Generated.xcconfig"
+```
+
+Update the ios/Runner/Debug.xcconfig file as below:
+
+```bash
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
+#include "Generated.xcconfig"
+```
+If you receive the below warning
+
+![Warning](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/warning.png)
+
+Update the Build setting CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER for ShareExtension to '$(inherited)':
+It will set the value to $(inherited) for the ShareExtension target to 'No'.
+
+![Build Setting](https://github.com/arrrrny/zikzak_share_handler/blob/master/setup_images/fix.png)
+
 
 ### Android
 
