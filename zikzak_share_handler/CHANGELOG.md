@@ -1,6 +1,7 @@
+# 0.0.27
+Updated IOS setup instructions
 # 0.0.26
 Updated IOS setup instructions
-
 # 0.0.25
 Updated package dependencies
 # 0.0.24
