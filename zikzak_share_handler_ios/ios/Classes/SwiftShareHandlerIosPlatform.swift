@@ -35,7 +35,11 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
         let eventsChannel = FlutterEventChannel(name: kEventsChannel, binaryMessenger: messenger)
         eventsChannel.setStreamHandler(instance)
 
+        // Register as both application and scene delegate
         registrar.addApplicationDelegate(instance)
+        if #available(iOS 13.0, *) {
+            registrar.addSceneDelegate(instance)
+        }
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -110,6 +114,58 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
             }
         }
         return false
+    }
+
+    // MARK: - UISceneDelegate methods for iOS 13+
+
+    // This is called when a scene is asked to open a URL (iOS 13+)
+    // It replaces application(_:open:options:) for scene-based apps
+    // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3238059-scene
+    @available(iOS 13.0, *)
+    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
+        for context in URLContexts {
+            let url = context.url
+            if (hasMatchingSchemePrefix(url: url)) {
+                return handleUrl(url: url, setInitialData: false)
+            }
+        }
+        return false
+    }
+
+    // This is called when a scene continues a user activity (iOS 13+)
+    // It replaces application(_:continue:restorationHandler:) for scene-based apps
+    // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3238055-scene
+    @available(iOS 13.0, *)
+    public func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
+        if let url = userActivity.webpageURL {
+            if (hasMatchingSchemePrefix(url: url)) {
+                return handleUrl(url: url, setInitialData: true)
+            }
+        }
+        return false
+    }
+
+    // This is called during scene connection to handle initial URLs (iOS 13+)
+    // Replaces didFinishLaunchingWithOptions for scene-based launches
+    // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3197914-scene
+    @available(iOS 13.0, *)
+    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        // Handle URLs passed during app launch
+        if let urlContext = connectionOptions.urlContexts.first {
+            let url = urlContext.url
+            if (hasMatchingSchemePrefix(url: url)) {
+                _ = handleUrl(url: url, setInitialData: true)
+            }
+        }
+
+        // Handle user activities passed during app launch
+        if let userActivity = connectionOptions.userActivities.first {
+            if let url = userActivity.webpageURL {
+                if (hasMatchingSchemePrefix(url: url)) {
+                    _ = handleUrl(url: url, setInitialData: true)
+                }
+            }
+        }
     }
 
     private func handleUrl(url: URL?, setInitialData: Bool) -> Bool {

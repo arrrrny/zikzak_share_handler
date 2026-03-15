@@ -16,6 +16,8 @@ import android.util.Log
 
 object FileDirectory {
 
+    private val usedFileNames = mutableSetOf<String>()
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -92,7 +94,7 @@ object FileDirectory {
                     val columnIndex = cursor.getColumnIndexOrThrow(column)
                     val fileName = cursor.getString(columnIndex)
                     Log.i("FileDirectory", "File name: $fileName")
-                    targetFile = File(context.cacheDir, fileName)
+                    targetFile = File(context.cacheDir, getUniqueFileName(fileName))
                 }
             } finally {
                 cursor?.close()
@@ -108,7 +110,8 @@ object FileDirectory {
                     }
                 }
                 val type = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
-                targetFile = File(context.cacheDir, "${prefix}_${Date().time}.$type")
+                val baseFileName = "${prefix}_${Date().time}.$type"
+                targetFile = File(context.cacheDir, getUniqueFileName(baseFileName))
             }
             val uri = selectionArgs?.let { args -> uri.buildUpon().appendPath(args.first()).build() } ?: uri
             context.contentResolver.openInputStream(uri)?.use { input ->
@@ -133,6 +136,32 @@ object FileDirectory {
             cursor?.close()
         }
         return null
+    }
+
+    /**
+     * Generate a unique filename by appending a counter if needed
+     *
+     * @param fileName The original filename
+     * @return A unique filename
+     */
+    private fun getUniqueFileName(fileName: String): String {
+        var finalName = fileName
+        var counter = 1
+
+        while (usedFileNames.contains(finalName)) {
+            val lastDotIndex = fileName.lastIndexOf('.')
+            finalName = if (lastDotIndex != -1) {
+                val nameWithoutExtension = fileName.substring(0, lastDotIndex)
+                val extension = fileName.substring(lastDotIndex)
+                "$nameWithoutExtension ($counter)$extension"
+            } else {
+                "$fileName ($counter)"
+            }
+            counter++
+        }
+
+        usedFileNames.add(finalName)
+        return finalName
     }
 
 
