@@ -52,12 +52,12 @@ open class ShareHandlerIosViewController: UIViewController {
                 loadIds();
         Task {
             await handleInputItems()
+            extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
         }
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
     
     func handleInputItems() async {
