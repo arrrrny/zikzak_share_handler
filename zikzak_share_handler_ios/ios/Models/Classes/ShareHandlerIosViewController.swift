@@ -26,6 +26,7 @@ open class ShareHandlerIosViewController: UIViewController {
     let fileURLType = UTType.fileURL.identifier
     let dataContentType = UTType.data.identifier
     var sharedAttachments: [SharedAttachment] = []
+    var usedFileNames: Set<String> = []
     lazy var userDefaults: UserDefaults = {
         return UserDefaults(suiteName: ShareHandlerIosViewController.appGroupId)!
     }()
@@ -133,7 +134,7 @@ open class ShareHandlerIosViewController: UIViewController {
     
     public func handleImages (content: NSExtensionItem, attachment: NSItemProvider, index: Int) async throws {
         let data = try await attachment.loadItem(forTypeIdentifier: imageContentType, options: nil)
-            
+
         var fileName: String?
         var imageData: Data?
         var sourceUrl: URL?
@@ -141,13 +142,27 @@ open class ShareHandlerIosViewController: UIViewController {
             fileName = getFileName(from: url, type: .image)
             sourceUrl = url
         } else if let iData = data as? Data {
-            fileName = UUID().uuidString + ".png"
+            var baseName = UUID().uuidString + ".png"
+            var counter = 1
+            while usedFileNames.contains(baseName) {
+                baseName = UUID().uuidString + ".png"
+                counter += 1
+            }
+            fileName = baseName
+            usedFileNames.insert(baseName)
             imageData = iData
         } else if let image = data as? UIImage {
-            fileName = UUID().uuidString + ".png"
+            var baseName = UUID().uuidString + ".png"
+            var counter = 1
+            while usedFileNames.contains(baseName) {
+                baseName = UUID().uuidString + ".png"
+                counter += 1
+            }
+            fileName = baseName
+            usedFileNames.insert(baseName)
             imageData = image.pngData()
         }
-        
+
         if let _fileName = fileName {
             let newFileUrl = getNewFileUrl(fileName: _fileName)
             do {
@@ -157,27 +172,27 @@ open class ShareHandlerIosViewController: UIViewController {
             } catch {
                 print("Error removing item")
             }
-            
-            
+
+
             var copied: Bool = false
             if let _data = imageData {
                 copied = FileManager.default.createFile(atPath: newFileUrl.path, contents: _data)
             } else if let _sourceUrl = sourceUrl {
                 copied = copyFile(at: _sourceUrl, to: newFileUrl)
             }
-            
+
             if (copied) {
                 sharedAttachments.append(SharedAttachment.init(path:  newFileUrl.absoluteString, type: .image))
             } else {
                 dismissWithError()
                 return
             }
-            
+
         } else {
             dismissWithError()
             return
         }
-        
+
     }
     
     public func handleVideos (content: NSExtensionItem, attachment: NSItemProvider, index: Int) async throws {
@@ -308,16 +323,37 @@ open class ShareHandlerIosViewController: UIViewController {
     
     func getFileName(from url: URL, type: SharedAttachmentType) -> String {
         var name = url.lastPathComponent
-        
+
         if (name.isEmpty) {
             name = UUID().uuidString + "." + getExtension(from: url, type: type)
         }
-        
-        return name
+
+        // Check if filename already exists and append counter if needed
+        var finalName = name
+        var counter = 1
+
+        while usedFileNames.contains(finalName) {
+            let nameWithoutExtension = (name as NSString).deletingPathExtension
+            let fileExtension = (name as NSString).pathExtension
+
+            if fileExtension.isEmpty {
+                finalName = "\(nameWithoutExtension) (\(counter))"
+            } else {
+                finalName = "\(nameWithoutExtension) (\(counter)).\(fileExtension)"
+            }
+            counter += 1
+        }
+
+        // Track this filename
+        usedFileNames.insert(finalName)
+
+        return finalName
     }
     
     func copyFile(at srcURL: URL, to dstURL: URL) -> Bool {
         do {
+            // Since we now ensure unique filenames, we don't need to delete existing files
+            // But check just in case and delete if needed
             if FileManager.default.fileExists(atPath: dstURL.path) {
                 try FileManager.default.removeItem(at: dstURL)
             }
