@@ -262,7 +262,10 @@ open class ShareHandlerIosViewController: UIViewController {
         let serviceName = intent?.serviceName
         let speakableGroupName = intent?.speakableGroupName
         
-        let sharedMedia = SharedMedia.init(attachments: sharedAttachments, conversationIdentifier: conversationIdentifier, content: sharedText.joined(separator: "\n"), speakableGroupName: speakableGroupName?.spokenPhrase, serviceName: serviceName, senderIdentifier: sender?.contactIdentifier ?? sender?.customIdentifier, imageFilePath: nil)
+        let extensionItem = extensionContext?.inputItems[0] as? NSExtensionItem
+        let subject = extensionItem?.attributedContentText?.string
+        
+        let sharedMedia = SharedMedia.init(attachments: sharedAttachments, conversationIdentifier: conversationIdentifier, content: sharedText.joined(separator: "\n"), speakableGroupName: speakableGroupName?.spokenPhrase, serviceName: serviceName, senderIdentifier: sender?.contactIdentifier ?? sender?.customIdentifier, imageFilePath: nil, subject: subject)
         
         let json = sharedMedia.toJson()
         
@@ -271,10 +274,13 @@ open class ShareHandlerIosViewController: UIViewController {
         
         while (responder != nil) {
             if let application = responder as? UIApplication {
-                application.open(url!, options: [:], completionHandler: nil)
-                break
+                if #available(iOS 18.0, *) {
+                    let _ = application.open(url!, options: [:], completionHandler: nil)
+                } else {
+                    let _ = application.perform(selectorOpenURL, with: url)
+                }
             }
-            responder = responder!.next
+            responder = responder?.next
         }
     }
     

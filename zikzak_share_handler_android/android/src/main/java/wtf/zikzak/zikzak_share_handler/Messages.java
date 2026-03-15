@@ -134,6 +134,12 @@ public class Messages {
       this.imageFilePath = setterArg;
     }
 
+    private @Nullable String subject;
+    public @Nullable String getSubject() { return subject; }
+    public void setSubject(@Nullable String setterArg) {
+      this.subject = setterArg;
+    }
+
     public static final class Builder {
       private @Nullable List<SharedAttachment> attachments;
       public @NonNull Builder setAttachments(@Nullable List<SharedAttachment> setterArg) {
@@ -170,6 +176,11 @@ public class Messages {
         this.imageFilePath = setterArg;
         return this;
       }
+      private @Nullable String subject;
+      public @NonNull Builder setSubject(@Nullable String setterArg) {
+        this.subject = setterArg;
+        return this;
+      }
       public @NonNull SharedMedia build() {
         SharedMedia pigeonReturn = new SharedMedia();
         pigeonReturn.setAttachments(attachments);
@@ -179,6 +190,7 @@ public class Messages {
         pigeonReturn.setServiceName(serviceName);
         pigeonReturn.setSenderIdentifier(senderIdentifier);
         pigeonReturn.setImageFilePath(imageFilePath);
+        pigeonReturn.setSubject(subject);
         return pigeonReturn;
       }
     }
@@ -195,6 +207,7 @@ public class Messages {
       toMapResult.put("serviceName", serviceName);
       toMapResult.put("senderIdentifier", senderIdentifier);
       toMapResult.put("imageFilePath", imageFilePath);
+      toMapResult.put("subject", subject);
       return toMapResult;
     }
     static @NonNull SharedMedia fromMap(@NonNull Map<String, Object> map) {
@@ -217,6 +230,8 @@ public class Messages {
       pigeonResult.setSenderIdentifier((String)senderIdentifier);
       Object imageFilePath = map.get("imageFilePath");
       pigeonResult.setImageFilePath((String)imageFilePath);
+      Object subject = map.get("subject");
+      pigeonResult.setSubject((String)subject);
       return pigeonResult;
     }
   }
