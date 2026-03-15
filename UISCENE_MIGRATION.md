@@ -24,29 +24,9 @@ import Flutter
 
 @available(iOS 13.0, *)
 class SceneDelegate: FlutterSceneDelegate {
-
-    override func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        super.scene(scene, willConnectTo: session, options: connectionOptions)
-
-        // Handle any URLs that were used to open the app
-        if let urlContext = connectionOptions.urlContexts.first {
-            let url = urlContext.url
-            _ = scene(scene, openURLContexts: connectionOptions.urlContexts)
-        }
-
-        // Handle user activities (for universal links and handoff)
-        if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
-            _ = scene(scene, continue: userActivity)
-        }
-    }
-
-    override func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
-        return super.scene(scene, openURLContexts: URLContexts)
-    }
-
-    override func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
-        return super.scene(scene, continue: userActivity)
-    }
+    // FlutterSceneDelegate already implements all the necessary scene delegate methods
+    // and properly routes them to registered plugins (like ShareHandlerIosPlatform).
+    // No additional override is needed - the base implementation handles everything.
 }
 ```
 
