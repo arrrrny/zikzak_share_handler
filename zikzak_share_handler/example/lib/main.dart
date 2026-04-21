@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:zikzak_share_handler/zikzak_share_handler.dart';
 
 void main() {
@@ -17,30 +15,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  SharedMedia? media;
+
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _initPlatformState();
   }
 
-  SharedMedia? media;
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
+  Future<void> _initPlatformState() async {
     final handler = ShareHandler.instance;
     media = await handler.getInitialSharedMedia();
 
-    handler.sharedMediaStream.listen((SharedMedia media) {
+    handler.sharedMediaStream.listen((SharedMedia sharedMedia) {
       if (!mounted) return;
       setState(() {
-        this.media = media;
+        media = sharedMedia;
       });
     });
-    if (!mounted) return;
 
-    setState(() {
-      // _platformVersion = platformVersion;
-    });
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -59,9 +54,8 @@ class _MyAppState extends State<MyApp> {
               const SizedBox(height: 10),
               Text("Shared files: ${media?.attachments?.length}"),
               ...(media?.attachments ?? []).map((attachment) {
-                final _path = attachment?.path;
-                if (_path != null &&
-                    attachment?.type == SharedAttachmentType.image) {
+                final path = attachment.path;
+                if (attachment.type == SharedAttachmentType.image) {
                   return Column(
                     children: [
                       ElevatedButton(
@@ -70,19 +64,20 @@ class _MyAppState extends State<MyApp> {
                             conversationIdentifier:
                                 "custom-conversation-identifier",
                             conversationName: "John Doe",
-                            conversationImageFilePath: _path,
+                            conversationImageFilePath: path,
                             serviceName: "custom-service-name",
                           );
                         },
                         child: const Text("Record message"),
                       ),
                       const SizedBox(height: 10),
-                      Image.file(File(_path)),
+                      Image.file(File(path),
+                          width: 200, height: 200, fit: BoxFit.cover),
                     ],
                   );
                 } else {
                   return Text(
-                      "${attachment?.type} Attachment: ${attachment?.path}");
+                      "${attachment.type} Attachment: ${attachment.path}");
                 }
               }),
             ],

@@ -4,14 +4,7 @@ import Photos
 import Intents
 import zikzak_share_handler_ios_models
 
-public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler, ShareHandlerApi {
-    
-    
-    //     public static func register(with registrar: FlutterPluginRegistrar) {
-    //       let channel = FlutterMethodChannel(name: "zikzak_share_handler_ios", binaryMessenger: registrar.messenger())
-    //       let instance = SwiftShareHandlerPlugin()
-    //       registrar.addMethodCallDelegate(instance, channel: channel)
-    //     }
+public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler, ShareHandlerApi, FlutterSceneLifeCycleDelegate {
 
     static let kEventsChannel = "wtf.zikzak.zikzak_share_handler/sharedMediaStream"
 
@@ -149,23 +142,23 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // Replaces didFinishLaunchingWithOptions for scene-based launches
     // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3197914-scene
     @available(iOS 13.0, *)
-    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Handle URLs passed during app launch
-        if let urlContext = connectionOptions.urlContexts.first {
+    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions?) -> Bool {
+        var handled = false
+        if let urlContext = connectionOptions?.urlContexts.first {
             let url = urlContext.url
             if (hasMatchingSchemePrefix(url: url)) {
-                _ = handleUrl(url: url, setInitialData: true)
+                handled = handleUrl(url: url, setInitialData: true)
             }
         }
 
-        // Handle user activities passed during app launch
-        if let userActivity = connectionOptions.userActivities.first {
+        if let userActivity = connectionOptions?.userActivities.first {
             if let url = userActivity.webpageURL {
                 if (hasMatchingSchemePrefix(url: url)) {
-                    _ = handleUrl(url: url, setInitialData: true)
+                    handled = handleUrl(url: url, setInitialData: true) || handled
                 }
             }
         }
+        return handled
     }
 
     private func handleUrl(url: URL?, setInitialData: Bool) -> Bool {

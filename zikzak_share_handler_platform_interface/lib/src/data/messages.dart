@@ -22,7 +22,7 @@ class SharedAttachment {
   static SharedAttachment decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     String path = pigeonMap['path']! as String;
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       return SharedAttachment(
         path: Uri.decodeFull(path),
         type: SharedAttachmentType.values[pigeonMap['type']! as int],
@@ -151,7 +151,7 @@ class ShareHandlerApi {
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
   ShareHandlerApi({BinaryMessenger? binaryMessenger})
-    : _binaryMessenger = binaryMessenger;
+      : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 

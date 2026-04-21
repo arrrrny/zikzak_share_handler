@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  zikzak_share_handler_platform_interface: ^0.0.7
-  # zikzak_share_handler_platform_interface:
-  #   path: ../zikzak_share_handler_platform_interface
+  # zikzak_share_handler_platform_interface: ^0.0.7
+  zikzak_share_handler_platform_interface:
+    path: ../zikzak_share_handler_platform_interface
 
 dev_dependencies:
   flutter_lints:
@@ -25,4 +25,3 @@ flutter:
       android:
         package: wtf.zikzak.zikzak_share_handler
         pluginClass: ShareHandlerPlugin
-      
