@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zikzak_share_handler_ios_models'
-  s.version          = '0.0.9'
+  s.version          = '0.0.31'
   s.summary          = 'Shared code for zikzak_share_handler_ios plugin.'
   s.description      = <<-DESC
   Shared code for zikzak_share_handler_ios plugin so main app and share extension targets can use it.

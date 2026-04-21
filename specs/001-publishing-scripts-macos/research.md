@@ -1,102 +1,60 @@
-# Research: Publishing Scripts and macOS Platform Support
+# Research: Publishing Scripts
 
-**Date**: 2026-04-15
-**Branch**: `001-publishing-scripts-macos`
+**Feature**: 001-publishing-scripts-macos
+**Date**: 2026-04-21
 
-## Decision 1: macOS Share Extension Architecture
+## R1: Package List Scoping
 
-**Decision**: Use the same two-target architecture as iOS (Main App + Share Extension) with shared models pod, adapted for macOS.
+**Decision**: Only include 5 active packages (platform_interface, android, ios, macos, main). Exclude linux, web, windows.
 
-**Rationale**:
-- macOS supports the same Share Extension mechanism (`com.apple.share-services` NSExtension point)
-- `NSExtensionContext.inputItems`, `UserDefaults(suiteName:)`, App Groups, and custom URL schemes all work identically on macOS
-- The iOS implementation has a proven, tested pattern that handles all edge cases (cold start, warm resume, stream vs initial media)
-- The two-podspec design (main plugin + shared models) is essential because the Share Extension target cannot import Flutter
+**Rationale**: User explicitly stated "only covers ios, macos, android — these 3 is enough." The linux/web/windows packages exist in the repo but are commented out in the main package pubspec.yaml and should not be part of the publish workflow.
 
-**Alternatives considered**:
-- **Apple Events / NSAppleEventManager**: Could receive URLs without a share extension but doesn't handle the share sheet UI. Would lose the visual share experience.
-- **Drop target / file URL handling**: Only works for drag-and-drop, not the system share sheet.
-- **Single-target without share extension**: Would only work for URL schemes, not for sharing text/files from other apps.
+**Alternatives considered**: Including all 8 packages (rejected — would publish inactive stubs); Making package list configurable via env var (unnecessary complexity — just edit the script when new platforms are activated).
 
-## Decision 2: macOS-Specific Adaptations from iOS
+## R2: Podspec Version Updates
 
-**Decision**: Key differences from iOS implementation:
+**Decision**: Update all 4 podspecs (2 iOS + 2 macOS) during `prepare_for_publish.sh`.
 
-| iOS Pattern | macOS Adaptation |
-|---|---|
-| `UIViewController` → Share Extension VC | `NSViewController` → Share Extension VC |
-| `UIApplication.shared.open(url)` | `NSWorkspace.shared.open(url)` |
-| `UIApplicationDelegate` + `UISceneDelegate` | `NSApplicationDelegate` only (no scene delegate on macOS) |
-| `registrar.addSceneDelegate()` | Not needed on macOS |
-| `FlutterSceneDelegate` | Not applicable; use `FlutterAppDelegate` on macOS |
-| `PHAsset` paths (`/var/mobile/Media`) | Local file paths, no `/var/mobile` prefix |
-| `MainInterface.storyboard` (iOS) | `MainInterface.storyboard` (macOS format) |
-| `INSendMessageIntent` | Available on macOS but lower priority; skip for initial URL sharing |
+**Rationale**: Reference project updates podspecs for iOS and macOS. This project has the same pattern — each platform has a main podspec and a models sub-podspec. The models podspecs also contain version lines that must be updated.
 
-**Rationale**: macOS and iOS share Foundation, Cocoa patterns, and the extension mechanism. The main differences are UIKit→AppKit (NS prefix) and no scene delegate lifecycle.
+**Alternatives considered**: Only updating main podspecs (rejected — models podspecs have independent versions and would drift); Using a Dart script for podspec manipulation (rejected — sed is sufficient and matches reference).
 
-## Decision 3: Implementation Phasing - URL Sharing First
+## R3: Podspec Version Line Patterns
 
-**Decision**: Implement URL sharing first, then extend to other media types.
+**Decision**: Use sed to replace `s.version = 'X.Y.Z'` pattern, matching the reference project approach.
 
-**Rationale**:
-- User explicitly requested this phasing: "focus on sharing urls first then we can extend to other media types"
-- URL sharing is the simplest flow to validate the entire pipeline (Share Extension → App Group → Custom URL Scheme → Flutter)
-- Faster to test on macOS (can share URLs from Safari directly)
-- Once URL sharing works, adding text/file/image support is incremental (same architecture, different UTI handling)
+**Rationale**: All 4 podspecs follow the pattern `s.version = 'X.Y.Z'` (with varying whitespace). The reference project uses `sed -i '' "s/s\.version.*=.*/s.version          = '$VERSION'/"` which works correctly.
 
-**Scope for initial URL sharing**:
-- Share Extension accepts URLs (UTI: `public.url`, `public.file-url`)
-- Share Extension stores URL in App Group UserDefaults
-- Share Extension opens main app via custom URL scheme
-- Main app plugin receives URL, decodes SharedMedia, fires stream/returns initial media
-- Example app prints received URL
+**Alternatives considered**: Ruby/CocoaPods API (overkill); awk-based parsing (unnecessary complexity).
 
-## Decision 4: macOS as Modernization Playground
+## R4: Dependency Conversion Strategy
 
-**Decision**: Use macOS implementation to establish modern patterns (SDK versions, lifecycle handling) that can later be backported to iOS.
+**Decision**: Adapt the reference project's `convert_path_to_versioned()` function, scoped to `zikzak_share_handler_*` package names.
 
-**Rationale**:
-- User stated: "macos would be a great playground to work with new lifecycles and can provide base path for modernizing the ios"
-- macOS only uses `NSApplicationDelegate` (simpler than iOS's dual AppDelegate+SceneDelegate)
-- Can establish clean SDK constraints and patterns without iOS backward compatibility concerns
-- Proven on macOS first, then port to iOS with confidence
+**Rationale**: The reference implementation handles both single-line (`package: ^X.Y.Z`) and multi-line path dependencies (`package:\n  path: ../package`) comprehensively with sed and awk. Same patterns apply here — the main package and platform packages all use path dependencies in development mode.
 
-## Decision 5: Publishing Scripts - Direct Port from inappwebview
+**Alternatives considered**: Simple sed-only approach (rejected — doesn't handle multi-line path deps); yaml-aware tooling like yq (adds dependency, reference project works fine without it).
 
-**Decision**: Port all 5 scripts from `zikzak_inappwebview/scripts/` with package name substitutions.
+## R5: Restore Dev Setup — Path Dependency Format
 
-**Rationale**:
-- The inappwebview scripts are battle-tested with the same federated plugin structure
-- Same conventions: `publish-X.Y.Z` branches, version sync, path↔versioned dependency conversion
-- Package order is equivalent: platform_interface → platform implementations → main package
-- The only differences are package names (8 packages vs 9 in inappwebview)
+**Decision**: Restore dependencies as multi-line format (`package:\n    path: ../package`), matching the existing pubspec.yaml style.
 
-**Package order for publishing**:
-1. `zikzak_share_handler_platform_interface`
-2. `zikzak_share_handler_android`
-3. `zikzak_share_handler_ios`
-4. `zikzak_share_handler_macos`
-5. `zikzak_share_handler_web`
-6. `zikzak_share_handler_windows`
-7. `zikzak_share_handler_linux`
-8. `zikzak_share_handler`
+**Rationale**: Current pubspec.yaml files use multi-line format for path dependencies. The restore script should produce output matching the existing style to minimize diff noise.
 
-## Decision 6: Podspec and Native Plugin Registration
+**Alternatives considered**: Single-line format (inconsistent with existing style).
 
-**Decision**: Use CocoaPods (same as iOS) with `FlutterMacOS` dependency and proper macOS platform declaration.
+## R6: Main Branch Name
 
-**Rationale**:
-- Flutter macOS plugins use CocoaPods natively
-- The inappwebview macOS plugin follows this exact pattern
-- Podspec name must match pubspec package name for federated plugin resolution
-- Current podspec incorrectly uses `FlutterMacOS` but has wrong platform (`ios`) in pubspec
+**Decision**: Use `master` as the main branch name, matching the reference project and spec assumption.
 
-## Decision 7: SharedAttachment.decode Platform Handling
+**Rationale**: Spec states "The main branch is called `master` (consistent with inappwebview setup)." The `push_to_master.sh` and `revert_publish_changes.sh` scripts reference `master`.
 
-**Decision**: Extend `Platform.isIOS` check to `Platform.isIOS || Platform.isMacOS` for URI decoding.
+**Alternatives considered**: Detecting default branch dynamically (unnecessary — project convention is `master`).
 
-**Rationale**:
-- macOS also URL-encodes paths in share contexts
-- Both platforms use the same Foundation framework
-- Minimal change, no risk to existing iOS/Android behavior
+## R7: Commented-Out Dependencies
+
+**Decision**: The `prepare_for_publish.sh` script should NOT touch commented-out dependency lines. The `restore_dev_setup.sh` script should leave commented lines as-is.
+
+**Rationale**: Linux/web/windows dependencies are commented out in the main pubspec.yaml. The prepare script only processes active (uncommented) path dependencies. This naturally excludes inactive platforms from the conversion.
+
+**Alternatives considered**: Uncommenting all platforms during publish (rejected — user wants only 3 active platforms).

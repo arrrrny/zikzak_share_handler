@@ -1,109 +1,116 @@
-# Data Model: Publishing Scripts and macOS Platform Support
+# Data Model: Publishing Scripts
 
-**Branch**: `001-publishing-scripts-macos`
+**Feature**: 001-publishing-scripts-macos
+**Date**: 2026-04-21
 
 ## Entities
 
-### SharedMedia (existing, shared across all platforms)
+### Package
 
-Represents a single shared content payload flowing from native to Flutter.
-
-| Field | Type | Description |
-|---|---|---|
-| attachments | `List<SharedAttachment>?` | File attachments with paths and types |
-| conversationIdentifier | `String?` | Conversation ID (from INSendMessageIntent) |
-| content | `String?` | Shared text or URL content |
-| speakableGroupName | `String?` | Contact/group name |
-| serviceName | `String?` | Service that sent the content |
-| senderIdentifier | `String?` | Sender contact ID |
-| imageFilePath | `String?` | Sender avatar file path |
-| subject | `String?` | Subject line |
-
-**Encoding**: Pigeon `BasicMessageChannel` with custom codec (type IDs 128-130) OR JSON via `UserDefaults(suiteName:)` for Share Extension communication.
-
-**State transitions**:
-1. Created in Share Extension from `NSExtensionItem` input
-2. Serialized to JSON → stored in App Group `UserDefaults`
-3. Deserialized in main app plugin → sent to Flutter via `EventChannel` or `getInitialSharedMedia()`
-4. Consumed by Flutter app via stream or one-time read
-
-### SharedAttachment (existing, shared across all platforms)
-
-Represents a single file attachment within a shared media payload.
+Represents a federated plugin sub-package in the monorepo.
 
 | Field | Type | Description |
-|---|---|---|
-| path | `String` | File path on device (URI-decoded on iOS/macOS) |
-| type | `SharedAttachmentType` | Enum: image(0), video(1), audio(2), file(3) |
+|-------|------|-------------|
+| name | string | Directory/package name (e.g., `zikzak_share_handler_android`) |
+| directory | path | Relative path from repo root (same as `name`) |
+| publish_order | int | 1-based ordering for publish sequence |
+| has_podspecs | boolean | Whether package has Cocoa podspecs to update |
+| podspec_paths | path[] | Relative paths to podspec files |
+| dependencies | string[] | Names of other `zikzak_share_handler_*` packages it depends on |
 
-**Validation**: Path must be non-empty. Type must be valid enum value (0-3).
-
-**Platform behavior**:
-- iOS/macOS: `path` is URI-decoded (`Uri.decodeFull`)
-- Android/other: `path` is used as-is
-
-### ShareHandlerMacosPlatform (new)
-
-The macOS Dart-side platform implementation.
-
-| Responsibility | Method |
-|---|---|
-| Registration | `registerWith()` → sets `ShareHandlerPlatform.instance` |
-| Get initial share | `getInitialSharedMedia()` → Pigeon API call |
-| Record message | `recordSentMessage(...)` → Pigeon API call |
-| Reset initial | `resetInitialSharedMedia()` → Pigeon API call |
-| Stream | `sharedMediaStream` → EventChannel broadcast |
-
-**Relationships**: Extends `ShareHandlerPlatform` (from platform_interface). Delegates to native via `ShareHandlerApi` (Pigeon) and `EventChannel`.
-
-### SwiftShareHandlerMacosPlatform (new, native)
-
-The macOS native Swift plugin.
-
-| Responsibility | Method |
-|---|---|
-| Flutter registration | `register(with:)` → sets up channels, Pigeon API, EventChannel, app delegate |
-| URL handling | `application(_:openFile:)`, `application(_:openUrls:)` |
-| Initial URL (cold start) | `applicationWillFinishLaunching` or similar |
-| URL dispatch | `handleUrl(url:setInitialData:)` → reads App Group, decodes SharedMedia |
-
-**Relationships**: Conforms to `FlutterPlugin`, `FlutterStreamHandler`, `NSApplicationDelegate`. Singleton pattern (same as iOS).
-
-### ShareHandlerMacosViewController (new, native Share Extension)
-
-The macOS Share Extension view controller.
-
-| Responsibility | Method |
-|---|---|
-| Load input | `loadInputItems()` → iterate `NSExtensionContext.inputItems` |
-| URL extraction | Parse URL-type `NSItemProvider` items |
-| File extraction | Parse file-type `NSItemProvider` items (future phase) |
-| Store & redirect | `redirectToHostApp()` → write to App Group, open custom URL scheme |
-
-**Relationships**: Subclass of `NSViewController`. Uses `SharedMedia`/`SharedAttachment` models from shared pod.
-
-### Federated Package Dependency Graph
+### Active Packages
 
 ```
-zikzak_share_handler_platform_interface (base)
-  ↑ depends on
-  ├── zikzak_share_handler_android
-  ├── zikzak_share_handler_ios
-  ├── zikzak_share_handler_macos (NEW - to implement)
-  ├── zikzak_share_handler_web
-  ├── zikzak_share_handler_windows
-  └── zikzak_share_handler_linux
-  
-zikzak_share_handler (main/app-facing)
-  depends on ALL of the above
+zikzak_share_handler_platform_interface
+  publish_order: 1
+  has_podspecs: false
+  dependencies: []
+
+zikzak_share_handler_android
+  publish_order: 2
+  has_podspecs: false
+  dependencies: [zikzak_share_handler_platform_interface]
+
+zikzak_share_handler_ios
+  publish_order: 3
+  has_podspecs: true
+  podspec_paths:
+    - zikzak_share_handler_ios/ios/zikzak_share_handler_ios.podspec
+    - zikzak_share_handler_ios/ios/Models/zikzak_share_handler_ios_models.podspec
+  dependencies: [zikzak_share_handler_platform_interface]
+
+zikzak_share_handler_macos
+  publish_order: 4
+  has_podspecs: true
+  podspec_paths:
+    - zikzak_share_handler_macos/macos/zikzak_share_handler_macos.podspec
+    - zikzak_share_handler_macos/macos/Models/zikzak_share_handler_macos_models.podspec
+  dependencies: [zikzak_share_handler_platform_interface]
+
+zikzak_share_handler
+  publish_order: 5
+  has_podspecs: false
+  dependencies: [
+    zikzak_share_handler_platform_interface,
+    zikzak_share_handler_android,
+    zikzak_share_handler_ios,
+    zikzak_share_handler_macos
+  ]
 ```
 
-### Publishing Script Configuration
+### Dependency Graph
 
-| Script | Input | Output |
-|---|---|---|
-| `prepare_for_publish.sh` | Version number | Publish branch with versioned deps |
-| `publish.sh` | (none) | Published packages on pub.dev |
-| `restore_dev_setup.sh` | (none) | Path dependencies restored |
-| `revert_publish_changes.sh` | (none) | Back on main branch |
-| `push_to_master.sh` | (none) | Merged to master with tag |
+```
+platform_interface (1)
+    ├── android (2)
+    ├── ios (3)
+    └── macos (4)
+         \  (all above)
+          main package (5)
+```
+
+### Dependency Format States
+
+Path dependencies (development mode):
+```yaml
+zikzak_share_handler_platform_interface:
+  path: ../zikzak_share_handler_platform_interface
+```
+
+Versioned dependencies (publish mode):
+```yaml
+zikzak_share_handler_platform_interface: ^X.Y.Z
+```
+
+### Script Data Flow
+
+```
+prepare_for_publish.sh
+  Input: version string (or auto-detect from main pubspec.yaml)
+  Mutates:
+    - */pubspec.yaml (version + dependencies)
+    - */*.podspec (version in 4 files)
+    - */CHANGELOG.md (prepend new version entry)
+  Output: git branch `publish-X.Y.Z` with committed changes
+
+publish.sh
+  Input: none (reads versions from pubspec.yaml)
+  Validates: flutter analyze, dry-run publish
+  Verifies: dependency availability on pub.dev (retry with backoff)
+  Output: packages published to pub.dev in order
+
+restore_dev_setup.sh
+  Input: none
+  Mutates: */pubspec.yaml (converts versioned → path deps)
+  Output: path dependencies restored, pub get run on all packages
+
+revert_publish_changes.sh
+  Input: none (interactive confirmation)
+  Mutates: git state (switch to master, optionally delete publish branch)
+  Output: repo on master with dev setup restored
+
+push_to_master.sh
+  Input: none (reads version from branch name)
+  Mutates: git state (merge to master, create tag, push)
+  Output: master branch updated with tag pushed to remote
+```

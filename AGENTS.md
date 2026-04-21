@@ -1,8 +1,9 @@
 # zikzak_share_handler Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-15
+Auto-generated from all feature plans. Last updated: 2026-04-21
 
 ## Active Technologies
+- Bash (POSIX-compatible, macOS-centric), Dart (SDK >=2.14.0 <4.0.0) + Flutter CLI, git, curl, sed, awk, pub.dev API (001-publishing-scripts-macos)
 
 - Dart (SDK >=2.14.0 <4.0.0), Swift 5.0, Bash + Flutter (>=2.0.0), FlutterMacOS, CocoaPods, AppKit, Foundation (001-publishing-scripts-macos)
 
@@ -22,6 +23,7 @@ tests/
 Dart (SDK >=2.14.0 <4.0.0), Swift 5.0, Bash: Follow standard conventions
 
 ## Recent Changes
+- 001-publishing-scripts-macos: Added Bash (POSIX-compatible, macOS-centric), Dart (SDK >=2.14.0 <4.0.0) + Flutter CLI, git, curl, sed, awk, pub.dev API
 
 - 001-publishing-scripts-macos: Added Dart (SDK >=2.14.0 <4.0.0), Swift 5.0, Bash + Flutter (>=2.0.0), FlutterMacOS, CocoaPods, AppKit, Foundation
 

@@ -1,3 +1,7 @@
+## 0.0.31 - 2026-04-21
+
+* fix: UIApplication.openURL is deprecated
+
 # 0.0.6
 Fix problem with special characters in filename
 Update to allow for newer dart sdk version

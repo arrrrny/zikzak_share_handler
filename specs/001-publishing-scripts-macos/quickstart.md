@@ -1,65 +1,70 @@
-# Quickstart: macOS Share Handler Implementation
+# Quickstart: Publishing Scripts
 
-**Branch**: `001-publishing-scripts-macos`
+**Feature**: 001-publishing-scripts-macos
+**Date**: 2026-04-21
 
 ## Prerequisites
 
-- Flutter SDK with macOS desktop support enabled
-- Xcode with macOS SDK
-- CocoaPods installed
+- Flutter SDK installed and on PATH
+- Git repo on `master` branch with clean working tree
+- pub.dev credentials configured (`dart pub login`)
+- All packages use path dependencies (development mode)
 
-## Development Setup
+## Workflow
 
-### 1. Enable macOS on the main package
-
-Uncomment macOS in `zikzak_share_handler/pubspec.yaml`:
-- `macos: default_package: zikzak_share_handler_macos` under plugin platforms
-- `zikzak_share_handler_macos: path: ../zikzak_share_handler_macos` under dependencies
-
-### 2. Fix macOS pubspec.yaml
-
-In `zikzak_share_handler_macos/pubspec.yaml`:
-- Change `platforms: ios:` to `platforms: macos:`
-- Add `dartPluginClass: ShareHandlerMacosPlatform`
-- Add `implements: zikzak_share_handler`
-- Switch dependency from versioned to path for dev
-
-### 3. Fix macOS podspec
-
-In `zikzak_share_handler_macos/macos/zikzak_share_handler.podspec`:
-- Rename to `zikzak_share_handler_macos.podspec`
-- Update `s.name` to `zikzak_share_handler_macos`
-
-### 4. Build and test cycle
+### 1. Prepare for publishing
 
 ```bash
-cd zikzak_share_handler/example
-flutter pub get
-flutter run -d macos
+./scripts/prepare_for_publish.sh 0.0.31
 ```
 
-## Testing URL Sharing
+This will:
+- Create branch `publish-0.0.31`
+- Update version in all 5 package pubspec.yaml files
+- Update version in 4 podspec files
+- Convert path dependencies to `^0.0.31`
+- Generate changelogs from git history
+- Commit all changes
 
-1. Build and run the example app on macOS
-2. Open Safari, navigate to any page
-3. Use File → Share → select the example app
-4. Verify the shared URL prints in the console
-
-## Publishing Scripts Usage
+### 2. Publish to pub.dev
 
 ```bash
-# 1. Prepare for publish (creates branch, updates versions)
-./scripts/prepare_for_publish.sh 1.0.0
-
-# 2. Publish to pub.dev
 ./scripts/publish.sh
+```
 
-# 3. After publish, restore dev setup
-./scripts/restore_dev_setup.sh
+This will:
+- Publish packages in dependency order (platform_interface → android → ios → macos → main)
+- Verify each dependency is available on pub.dev before publishing dependents
+- Run `flutter analyze` and `--dry-run` before each publish
+- Create and push git tag after all packages are published
 
-# OR revert everything
-./scripts/revert_publish_changes.sh
+### 3. Merge to master and push
 
-# OR merge to master and push
+```bash
 ./scripts/push_to_master.sh
 ```
+
+This will:
+- Merge `publish-0.0.31` into `master`
+- Create version tag `0.0.31`
+- Push to remote
+
+### 4. Restore development setup
+
+```bash
+./scripts/restore_dev_setup.sh
+```
+
+This will:
+- Convert all versioned dependencies back to path dependencies
+- Run `flutter pub get` on all packages
+
+## Abort / Rollback
+
+If you need to discard publish preparation:
+
+```bash
+./scripts/revert_publish_changes.sh
+```
+
+This switches back to `master`, optionally deletes the publish branch, and restores dev dependencies.
