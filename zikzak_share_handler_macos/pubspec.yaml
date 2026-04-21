@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  zikzak_share_handler_platform_interface: ^0.0.31
+  zikzak_share_handler_platform_interface:
+    path: ../zikzak_share_handler_platform_interface
 
 dev_dependencies:
   flutter_lints:

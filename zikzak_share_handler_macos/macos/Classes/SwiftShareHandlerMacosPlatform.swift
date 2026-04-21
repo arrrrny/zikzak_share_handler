@@ -50,7 +50,7 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
     public func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
             if hasMatchingSchemePrefix(url: url) {
-                _ = handleUrl(url: url, setInitialData: false)
+                _ = handleUrl(url: url, setInitialData: true)
             }
         }
     }
