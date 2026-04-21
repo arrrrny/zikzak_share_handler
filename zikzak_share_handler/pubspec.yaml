@@ -14,30 +14,24 @@ flutter:
         default_package: zikzak_share_handler_android
       ios:
         default_package: zikzak_share_handler_ios
-      # linux:
-      #   default_package: zikzak_share_handler_linux
+      linux:
+        default_package: zikzak_share_handler_linux
       macos:
         default_package: zikzak_share_handler_macos
-      # web:
-      #   default_package: zikzak_share_handler_web
-      # windows:
-      #   default_package: zikzak_share_handler_windows
+      web:
+        default_package: zikzak_share_handler_web
+      windows:
+        default_package: zikzak_share_handler_windows
 
 dependencies:
   flutter:
     sdk: flutter
-  # zikzak_share_handler_android: ^0.0.12
   zikzak_share_handler_android: ^0.0.31
-  # zikzak_share_handler_ios: ^0.0.17
   zikzak_share_handler_ios: ^0.0.31
-  # zikzak_share_handler_linux:
-  #   path: ../zikzak_share_handler_linux
+  zikzak_share_handler_linux: ^0.0.31
   zikzak_share_handler_macos: ^0.0.31
-  # zikzak_share_handler_web:
-  #   path: ../zikzak_share_handler_web
-  # zikzak_share_handler_windows:
-  #   path: ../zikzak_share_handler_windows
-  # zikzak_share_handler_platform_interface: ^0.0.7
+  zikzak_share_handler_web: ^0.0.31
+  zikzak_share_handler_windows: ^0.0.31
   zikzak_share_handler_platform_interface: ^0.0.31
 
 dev_dependencies:
