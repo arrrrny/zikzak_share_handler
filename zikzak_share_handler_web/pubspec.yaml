@@ -1,6 +1,6 @@
 name: zikzak_share_handler_web
 description: An implementation for the Web platform of the Flutter zikzak_share_handler plugin.
-repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_platform_web
+repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_web
 version: 0.0.31
 
 environment:
