@@ -28,6 +28,10 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         eventSink = events
+        if let media = latestMedia {
+            eventSink?(media.toDictionary())
+            latestMedia = nil
+        }
         return nil
     }
 
@@ -50,22 +54,14 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
     @objc(handleOpenURLs:) public func handleOpen(_ urls: [URL]) -> Bool {
         for url in urls {
             if hasMatchingSchemePrefix(url: url) {
-                _ = handleUrl(url: url, setInitialData: false)
+                let isInitialData = eventSink == nil
+                _ = handleUrl(url: url, setInitialData: isInitialData)
             }
         }
         return true
     }
 
     public func handleDidFinishLaunching(_ notification: Notification) {
-        if let userDefaults = notification.userInfo?[NSApplication.launchUserNotificationUserInfoKey] as? [AnyHashable: Any] {
-            for (_, value) in userDefaults {
-                if let url = value as? URL {
-                    if hasMatchingSchemePrefix(url: url) {
-                        _ = handleUrl(url: url, setInitialData: true)
-                    }
-                }
-            }
-        }
     }
 
     private func handleUrl(url: URL?, setInitialData: Bool) -> Bool {
