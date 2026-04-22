@@ -41,6 +41,9 @@ PACKAGES=(
     "zikzak_share_handler_android"
     "zikzak_share_handler_ios"
     "zikzak_share_handler_macos"
+    "zikzak_share_handler_windows"
+    "zikzak_share_handler_linux"
+    "zikzak_share_handler_web"
     "zikzak_share_handler"
 )
 
@@ -129,6 +132,9 @@ convert_path_to_versioned() {
         "zikzak_share_handler_android"
         "zikzak_share_handler_ios"
         "zikzak_share_handler_macos"
+        "zikzak_share_handler_windows"
+        "zikzak_share_handler_linux"
+        "zikzak_share_handler_web"
         "zikzak_share_handler"
     )
 
