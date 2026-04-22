@@ -15,14 +15,14 @@
 ### 1. Prepare for publishing
 
 ```bash
-./scripts/prepare_for_publish.sh 0.0.31
+./scripts/prepare_for_publish.sh 0.0.32
 ```
 
 This will:
-- Create branch `publish-0.0.31`
+- Create branch `publish-0.0.32`
 - Update version in all 5 package pubspec.yaml files
 - Update version in 4 podspec files
-- Convert path dependencies to `^0.0.31`
+- Convert path dependencies to `^0.0.32`
 - Generate changelogs from git history
 - Commit all changes
 
@@ -45,8 +45,8 @@ This will:
 ```
 
 This will:
-- Merge `publish-0.0.31` into `master`
-- Create version tag `0.0.31`
+- Merge `publish-0.0.32` into `master`
+- Create version tag `0.0.32`
 - Push to remote
 
 ### 4. Restore development setup

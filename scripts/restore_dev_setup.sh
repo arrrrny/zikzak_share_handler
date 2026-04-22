@@ -29,7 +29,7 @@ update_for_dev_mode() {
 
   # Use a Python one-liner for reliable YAML-aware transformation:
   # 1. Remove lines that are commented-out path deps with "# Commented for publishing"
-  # 2. Convert any hosted version deps (e.g. "zikzak_share_handler_foo: ^0.0.31")
+  # 2. Convert any hosted version deps (e.g. "zikzak_share_handler_foo: ^0.0.32")
   #    into path deps pointing to ../zikzak_share_handler_foo
   python3 -c "
 import re, sys
