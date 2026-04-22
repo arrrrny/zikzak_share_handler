@@ -19,11 +19,11 @@
 
 **Purpose**: Remove the broken example app and create a fresh Flutter project
 
-- [ ] T001 Delete existing example directory at `zikzak_share_handler/example/`
-- [ ] T002 Create new Flutter example project with iOS and macOS platforms at `zikzak_share_handler/example/` using `flutter create --platforms=ios,macos example/`
-- [ ] T003 Update `zikzak_share_handler/example/pubspec.yaml` to depend on `zikzak_share_handler` via path reference (`../`)
-- [ ] T004 Write example app Dart code in `zikzak_share_handler/example/lib/main.dart` — call `ShareHandler.instance.getInitialSharedMedia()` on init, listen to `sharedMediaStream`, display shared content and file attachments
-- [ ] T005 Run `flutter pub get` in `zikzak_share_handler/example/` to resolve dependencies
+- [x] T001 Delete existing example directory at `zikzak_share_handler/example/`
+- [x] T002 Create new Flutter example project with iOS and macOS platforms at `zikzak_share_handler/example/` using `flutter create --platforms=ios,macos example/`
+- [x] T003 Update `zikzak_share_handler/example/pubspec.yaml` to depend on `zikzak_share_handler` via path reference (`../`)
+- [x] T004 Write example app Dart code in `zikzak_share_handler/example/lib/main.dart` — call `ShareHandler.instance.getInitialSharedMedia()` on init, listen to `sharedMediaStream`, display shared content and file attachments
+- [x] T005 Run `flutter pub get` in `zikzak_share_handler/example/` to resolve dependencies
 
 ---
 
@@ -33,10 +33,10 @@
 
 **⚠️ CRITICAL**: This is the root cause fix. Without it, no share functionality works on macOS.
 
-- [ ] T006 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, replace `application(_:open:)` method (lines 50-56) with `handleOpenURLs(_:) -> Bool` that iterates URLs, checks `hasMatchingSchemePrefix`, and calls `handleUrl(url:setInitialData:false)` for matching URLs, returning `true`
-- [ ] T007 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, replace `applicationDidFinishLaunching(_:)` method (lines 76-86) with `handleDidFinishLaunching(_:) -> Bool` that reads `NSApplication.launchUserNotificationUserInfoKey` from notification userInfo and calls `handleUrl(url:setInitialData:true)` for matching URLs, returning `true`
-- [ ] T008 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, remove dead code methods: `applicationShouldHandleReopen(_:hasVisibleWindows:)` (lines 46-48), `application(_:openFile:)` (lines 58-64), `application(_:openFiles:)` (lines 66-74)
-- [ ] T009 Verify `handleUrl(url:setInitialData:)` and `hasMatchingSchemePrefix(url:)` private methods in `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift` are unchanged and correct (read UserDefaults by key, decode SharedMedia, push to eventSink)
+- [x] T006 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, replace `application(_:open:)` method (lines 50-56) with `handleOpenURLs(_:) -> Bool` that iterates URLs, checks `hasMatchingSchemePrefix`, and calls `handleUrl(url:setInitialData:false)` for matching URLs, returning `true`
+- [x] T007 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, replace `applicationDidFinishLaunching(_:)` method (lines 76-86) with `handleDidFinishLaunching(_:) -> Bool` that reads `NSApplication.launchUserNotificationUserInfoKey` from notification userInfo and calls `handleUrl(url:setInitialData:true)` for matching URLs, returning `true`
+- [x] T008 In `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift`, remove dead code methods: `applicationShouldHandleReopen(_:hasVisibleWindows:)` (lines 46-48), `application(_:openFile:)` (lines 58-64), `application(_:openFiles:)` (lines 66-74)
+- [x] T009 Verify `handleUrl(url:setInitialData:)` and `hasMatchingSchemePrefix(url:)` private methods in `zikzak_share_handler_macos/macos/Classes/SwiftShareHandlerMacosPlatform.swift` are unchanged and correct (read UserDefaults by key, decode SharedMedia, push to eventSink)
 
 **Checkpoint**: Plugin core is fixed. The macOS plugin will now receive URL events via `FlutterAppLifecycleDelegate` protocol.
 

@@ -47,33 +47,16 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
         return true
     }
 
-    public func application(_ application: NSApplication, open urls: [URL]) {
+    @objc(handleOpenURLs:) public func handleOpen(_ urls: [URL]) -> Bool {
         for url in urls {
             if hasMatchingSchemePrefix(url: url) {
-                _ = handleUrl(url: url, setInitialData: true)
+                _ = handleUrl(url: url, setInitialData: false)
             }
         }
+        return true
     }
 
-    public func application(_ sender: NSApplication, openFile filename: String) -> Bool {
-        let url = URL(fileURLWithPath: filename)
-        if hasMatchingSchemePrefix(url: url) {
-            return handleUrl(url: url, setInitialData: false)
-        }
-        return false
-    }
-
-    public func application(_ sender: NSApplication, openFiles filenames: [String]) -> Bool {
-        for filename in filenames {
-            let url = URL(fileURLWithPath: filename)
-            if hasMatchingSchemePrefix(url: url) {
-                return handleUrl(url: url, setInitialData: false)
-            }
-        }
-        return false
-    }
-
-    public func applicationDidFinishLaunching(_ notification: Notification) {
+    public func handleDidFinishLaunching(_ notification: Notification) {
         if let userDefaults = notification.userInfo?[NSApplication.launchUserNotificationUserInfoKey] as? [AnyHashable: Any] {
             for (_, value) in userDefaults {
                 if let url = value as? URL {

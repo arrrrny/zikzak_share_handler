@@ -27,7 +27,7 @@ open class ShareHandlerMacosViewController: NSViewController {
         ShareHandlerMacosViewController.appGroupId = (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String) ?? "group.\(ShareHandlerMacosViewController.hostAppBundleIdentifier)"
     }
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         loadIds()
         Task {
@@ -63,6 +63,10 @@ open class ShareHandlerMacosViewController: NSViewController {
         let data = try await attachment.loadItem(forTypeIdentifier: textContentType, options: nil)
         if let item = data as? String {
             sharedText.append(item)
+        } else if let url = data as? URL {
+            sharedText.append(url.absoluteString)
+        } else if let data = data as? Data, let str = String(data: data, encoding: .utf8) {
+            sharedText.append(str)
         }
     }
 
@@ -70,6 +74,10 @@ open class ShareHandlerMacosViewController: NSViewController {
         let data = try await attachment.loadItem(forTypeIdentifier: urlContentType, options: nil)
         if let item = data as? URL {
             sharedText.append(item.absoluteString)
+        } else if let str = data as? String {
+            sharedText.append(str)
+        } else if let d = data as? Data, let str = String(data: d, encoding: .utf8) {
+            sharedText.append(str)
         }
     }
 
