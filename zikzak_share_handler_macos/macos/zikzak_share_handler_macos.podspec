@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
     s.name             = 'zikzak_share_handler_macos'
-    s.version          = '0.0.31'
+    s.version          = '0.0.32'
     s.summary          = 'macos implementation of the zikzak_share_handler plugin.'
     s.description      = <<-DESC
     macos implementation of the zikzak_share_handler plugin.
