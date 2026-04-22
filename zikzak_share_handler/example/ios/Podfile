@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '14.1'
+platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -29,25 +29,20 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-  use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-  # zikzak_share_handler addition start
-  target 'ShareExtension' do
+  target 'RunnerTests' do
     inherit! :search_paths
-    pod "zikzak_share_handler_ios_models", :path => ".symlinks/plugins/zikzak_share_handler_ios/ios/Models"
   end
-  # zikzak_share_handler addition end
+end
+
+target 'ShareExtension' do
+  use_frameworks!
+  pod 'zikzak_share_handler_ios_models', :path => '../../zikzak_share_handler_ios_models'
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    target.build_configurations.each do |config|
-      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
-      if target.name == 'ShareExtension'
-        config.build_settings['ARCHS'] = 'x86_64'
-      end
-    end
   end
 end

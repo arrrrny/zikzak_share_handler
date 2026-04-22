@@ -1,4 +1,4 @@
-platform :osx, '13'
+platform :osx, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -30,15 +30,14 @@ target 'Runner' do
   use_frameworks!
 
   flutter_install_all_macos_pods File.dirname(File.realpath(__FILE__))
-  # zikzak_share_handler addition start
-  target 'ShareExtension' do
-    inherit! :search_paths
-    pod "zikzak_share_handler_macos_models", :path => "Flutter/ephemeral/.symlinks/plugins/zikzak_share_handler_macos/macos/Models"
-  end
-  # zikzak_share_handler addition end
   target 'RunnerTests' do
     inherit! :search_paths
   end
+end
+
+target 'ShareExtension' do
+  use_frameworks!
+  pod 'zikzak_share_handler_macos_models', :path => '../../../zikzak_share_handler_macos/macos/Models'
 end
 
 post_install do |installer|
