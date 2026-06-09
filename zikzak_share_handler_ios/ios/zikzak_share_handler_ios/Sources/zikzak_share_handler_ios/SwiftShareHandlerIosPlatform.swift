@@ -1,10 +1,12 @@
 import Flutter
-import UIKit
-import Photos
 import Intents
+import Photos
+import UIKit
 import zikzak_share_handler_ios_models
 
-public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler, ShareHandlerApi, FlutterSceneLifeCycleDelegate {
+public class ShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler,
+    ShareHandlerApi, FlutterSceneLifeCycleDelegate
+{
 
     static let kEventsChannel = "wtf.zikzak.zikzak_share_handler/sharedMediaStream"
 
@@ -13,16 +15,16 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     private var initialMedia: SharedMedia? = nil
     private var latestMedia: SharedMedia? = nil
 
-    private var eventSink: FlutterEventSink? = nil;
+    private var eventSink: FlutterEventSink? = nil
 
     // Singleton is required for calling functions directly from AppDelegate
     // - it is required if the developer is using also another library, which requires to call "application(_:open:options:)"
     // -> see Example app
-    public static let instance = SwiftShareHandlerIosPlatform()
+    public static let instance = ShareHandlerIosPlatform()
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let messenger : FlutterBinaryMessenger = registrar.messenger()
-        let api : ShareHandlerApi & NSObjectProtocol = instance
+        let messenger: FlutterBinaryMessenger = registrar.messenger()
+        let api: ShareHandlerApi & NSObjectProtocol = instance
         ShareHandlerApiSetup(messenger, api)
 
         let eventsChannel = FlutterEventChannel(name: kEventsChannel, binaryMessenger: messenger)
@@ -35,7 +37,9 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
         }
     }
 
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    public func onListen(
+        withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink
+    ) -> FlutterError? {
         eventSink = events
         return nil
     }
@@ -49,7 +53,8 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // - found the issue while developing multiple applications using this library, after "application(_:open:options:)" is called, the first app using this librabry (first app by bundle id alphabetically) is opened
     public func hasMatchingSchemePrefix(url: URL?) -> Bool {
         if let url = url, let appDomain = Bundle.main.bundleIdentifier {
-            return url.absoluteString.hasPrefix("\(self.customSchemePrefix)-\(appDomain)") || url.absoluteString.hasPrefix("file://")
+            return url.absoluteString.hasPrefix("\(self.customSchemePrefix)-\(appDomain)")
+                || url.absoluteString.hasPrefix("file://")
         }
         return false
     }
@@ -60,18 +65,23 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // If the URL does not include the module's prefix, we must return true since while our module cannot handle the link, other modules might be and returning false can prevent
     // them from getting the chance to.
     // Reference: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622921-application
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
+    public func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any] = [:]
+    ) -> Bool {
         if let url = launchOptions[UIApplication.LaunchOptionsKey.url] as? URL {
-            if (hasMatchingSchemePrefix(url: url)) {
+            if hasMatchingSchemePrefix(url: url) {
                 return handleUrl(url: url, setInitialData: true)
             }
             return true
-        } else if let activityDictionary = launchOptions[UIApplication.LaunchOptionsKey.userActivityDictionary] as? [AnyHashable: Any] {
+        } else if let activityDictionary = launchOptions[
+            UIApplication.LaunchOptionsKey.userActivityDictionary] as? [AnyHashable: Any]
+        {
             // Handle multiple URLs shared in
             for key in activityDictionary.keys {
                 if let userActivity = activityDictionary[key] as? NSUserActivity {
                     if let url = userActivity.webpageURL {
-                        if (hasMatchingSchemePrefix(url: url)) {
+                        if hasMatchingSchemePrefix(url: url) {
                             return handleUrl(url: url, setInitialData: true)
                         }
                         return true
@@ -87,8 +97,11 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // If the URL includes the module's ShareMedia prefix, then we process the URL and return true if we know how to handle that kind of URL or false if we are not able to.
     // If the URL does not include the module's prefix, then we return false to indicate our module's attempt to open the resource failed and others should be allowed to.
     // Reference: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623112-application
-    public func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        if (hasMatchingSchemePrefix(url: url)) {
+    public func application(
+        _ application: UIApplication, open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        if hasMatchingSchemePrefix(url: url) {
             return handleUrl(url: url, setInitialData: false)
         }
         return false
@@ -100,9 +113,12 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // If the URL includes the module's ShareMedia prefix, then we process the URL and return true if we know how to handle that kind of URL or false if we are not able to.
     // If the URL does not include the module's prefix, then we must return false to indicate that this module did not handle the prefix and that other modules should try to.
     // Reference: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623072-application
-    public func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]) -> Void) -> Bool {
+    public func application(
+        _ application: UIApplication, continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([Any]) -> Void
+    ) -> Bool {
         if let url = userActivity.webpageURL {
-            if (hasMatchingSchemePrefix(url: url)) {
+            if hasMatchingSchemePrefix(url: url) {
                 return handleUrl(url: url, setInitialData: true)
             }
         }
@@ -115,10 +131,11 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // It replaces application(_:open:options:) for scene-based apps
     // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3238059-scene
     @available(iOS 13.0, *)
-    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
+    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool
+    {
         for context in URLContexts {
             let url = context.url
-            if (hasMatchingSchemePrefix(url: url)) {
+            if hasMatchingSchemePrefix(url: url) {
                 return handleUrl(url: url, setInitialData: false)
             }
         }
@@ -131,7 +148,7 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     @available(iOS 13.0, *)
     public func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
         if let url = userActivity.webpageURL {
-            if (hasMatchingSchemePrefix(url: url)) {
+            if hasMatchingSchemePrefix(url: url) {
                 return handleUrl(url: url, setInitialData: true)
             }
         }
@@ -142,18 +159,21 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // Replaces didFinishLaunchingWithOptions for scene-based launches
     // Reference: https://developer.apple.com/documentation/uikit/uiscenedelegate/3197914-scene
     @available(iOS 13.0, *)
-    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions?) -> Bool {
+    public func scene(
+        _ scene: UIScene, willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions?
+    ) -> Bool {
         var handled = false
         if let urlContext = connectionOptions?.urlContexts.first {
             let url = urlContext.url
-            if (hasMatchingSchemePrefix(url: url)) {
+            if hasMatchingSchemePrefix(url: url) {
                 handled = handleUrl(url: url, setInitialData: true)
             }
         }
 
         if let userActivity = connectionOptions?.userActivities.first {
             if let url = userActivity.webpageURL {
-                if (hasMatchingSchemePrefix(url: url)) {
+                if hasMatchingSchemePrefix(url: url) {
                     handled = handleUrl(url: url, setInitialData: true) || handled
                 }
             }
@@ -164,9 +184,11 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     private func handleUrl(url: URL?, setInitialData: Bool) -> Bool {
         if let url = url {
             //            let appDomain = Bundle.main.bundleIdentifier!
-            let appGroupId = (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String) ?? "group.\(Bundle.main.bundleIdentifier!)"
+            let appGroupId =
+                (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String)
+                ?? "group.\(Bundle.main.bundleIdentifier!)"
             let userDefaults = UserDefaults(suiteName: appGroupId)
-            
+
             var sharedMedia: SharedMedia?
 
             let params = url.queryDictionary
@@ -175,18 +197,23 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
                     sharedMedia = try? JSONDecoder().decode(SharedMedia.self, from: data)
                 }
             } else if url.absoluteString.hasPrefix("file://") {
-                sharedMedia = SharedMedia.init(attachments: [SharedAttachment.init(path: url.absoluteString, type: SharedAttachmentType.file)], conversationIdentifier: nil, content: nil, speakableGroupName: nil, serviceName: nil, senderIdentifier: nil, imageFilePath: nil, subject: nil)
+                sharedMedia = SharedMedia.init(
+                    attachments: [
+                        SharedAttachment.init(
+                            path: url.absoluteString, type: SharedAttachmentType.file)
+                    ], conversationIdentifier: nil, content: nil, speakableGroupName: nil,
+                    serviceName: nil, senderIdentifier: nil, imageFilePath: nil, subject: nil)
             }
-            
+
             if let media = sharedMedia {
-                media.attachments?.forEach {$0.path = getAbsolutePath(for: $0.path) ?? $0.path}
+                media.attachments?.forEach { $0.path = getAbsolutePath(for: $0.path) ?? $0.path }
                 latestMedia = media
-                if (setInitialData) {
+                if setInitialData {
                     initialMedia = media
                 }
                 let map = media.toDictionary()
                 eventSink?(map)
-                
+
                 return true
             }
             //            if url.fragment == "media" {
@@ -251,24 +278,27 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     }
 
     private func getAbsolutePath(for identifier: String) -> String? {
-        if (identifier.starts(with: "file://") || identifier.starts(with: "/var/mobile/Media") || identifier.starts(with: "/private/var/mobile")) {
+        if identifier.starts(with: "file://") || identifier.starts(with: "/var/mobile/Media")
+            || identifier.starts(with: "/private/var/mobile")
+        {
             return identifier.replacingOccurrences(of: "file://", with: "")
         }
-        let phAsset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: .none).firstObject
-        if(phAsset == nil) {
+        let phAsset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: .none)
+            .firstObject
+        if phAsset == nil {
             return nil
         }
         let (url, _) = getFullSizeImageURLAndOrientation(for: phAsset!)
         return url
     }
 
-    private func getFullSizeImageURLAndOrientation(for asset: PHAsset)-> (String?, Int) {
+    private func getFullSizeImageURLAndOrientation(for asset: PHAsset) -> (String?, Int) {
         var url: String? = nil
         var orientation: Int = 0
         let semaphore = DispatchSemaphore(value: 0)
         let options2 = PHContentEditingInputRequestOptions()
         options2.isNetworkAccessAllowed = true
-        asset.requestContentEditingInput(with: options2){(input, info) in
+        asset.requestContentEditingInput(with: options2) { (input, info) in
             orientation = Int(input?.fullSizeImageOrientation ?? 0)
             url = input?.fullSizeImageURL?.path
             semaphore.signal()
@@ -277,17 +307,26 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
         return (url, orientation)
     }
 
-    func getInitialSharedMedia(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SharedMedia? {
+    func getInitialSharedMedia(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>)
+        -> SharedMedia?
+    {
         let sharedMedia = initialMedia
         return sharedMedia
     }
 
-    func recordSentMessage(_ media: SharedMedia?, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+    func recordSentMessage(
+        _ media: SharedMedia?, error: AutoreleasingUnsafeMutablePointer<FlutterError?>
+    ) {
         // Create an INSendMessageIntent to donate an intent for a conversation with Juan Chavez.
         if let media = media {
             if #available(iOS 14.0, *) {
-                let groupName = INSpeakableString(spokenPhrase: media.speakableGroupName ?? "Unknown Contact")
-                let sendMessageIntent = INSendMessageIntent(recipients: nil, outgoingMessageType: INOutgoingMessageType.outgoingMessageText, content: nil, speakableGroupName: groupName, conversationIdentifier: media.conversationIdentifier, serviceName: media.serviceName, sender: nil, attachments: nil)
+                let groupName = INSpeakableString(
+                    spokenPhrase: media.speakableGroupName ?? "Unknown Contact")
+                let sendMessageIntent = INSendMessageIntent(
+                    recipients: nil, outgoingMessageType: INOutgoingMessageType.outgoingMessageText,
+                    content: nil, speakableGroupName: groupName,
+                    conversationIdentifier: media.conversationIdentifier,
+                    serviceName: media.serviceName, sender: nil, attachments: nil)
 
                 // Add the user's avatar to the intent.
                 if let imagePath = media.imageFilePath {
@@ -300,14 +339,17 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
                 let interaction = INInteraction(intent: sendMessageIntent, response: nil)
                 interaction.donate(completion: { err in
                     if err != nil {
-                        error.pointee = FlutterError.init(code: "NATIVE_ERR", message: "Error: donating insendmessage intent", details: nil)
+                        error.pointee = FlutterError.init(
+                            code: "NATIVE_ERR", message: "Error: donating insendmessage intent",
+                            details: nil)
                     } else {
                         print("Successfully dontated INSendMessageIntent")
                     }
                 })
             }
         } else {
-            error.pointee = FlutterError.init(code: "NATIVE_ERR", message: "Error: decoding SharedMedia", details: nil)
+            error.pointee = FlutterError.init(
+                code: "NATIVE_ERR", message: "Error: decoding SharedMedia", details: nil)
         }
     }
 
@@ -318,15 +360,16 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
 
 extension URL {
     var queryDictionary: [String: String]? {
-        guard let query = self.query else { return nil}
+        guard let query = self.query else { return nil }
 
         var queryStrings = [String: String]()
         for pair in query.components(separatedBy: "&") {
 
             let key = pair.components(separatedBy: "=")[0]
 
-            let value = pair
-                .components(separatedBy:"=")[1]
+            let value =
+                pair
+                .components(separatedBy: "=")[1]
                 .replacingOccurrences(of: "+", with: " ")
                 .removingPercentEncoding ?? ""
 

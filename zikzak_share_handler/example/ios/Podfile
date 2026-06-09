@@ -33,10 +33,11 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   # zikzak_share_handler addition start
-  target 'ShareExtension' do
-    inherit! :search_paths
-    pod "zikzak_share_handler_ios_models", :path => ".symlinks/plugins/zikzak_share_handler_ios/ios/Models"
-  end
+    target 'ShareExtension' do
+        inherit! :search_paths
+        pod "zikzak_share_handler_ios_models", :path => ".symlinks/plugins/zikzak_share_handler_ios/ios"
+    end
+
   # zikzak_share_handler addition end
 end
 
