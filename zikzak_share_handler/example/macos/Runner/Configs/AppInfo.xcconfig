@@ -12,6 +12,3 @@ PRODUCT_BUNDLE_IDENTIFIER = wtf.zikzak.zikzakShareHandlerExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 wtf.zikzak. All rights reserved.
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"

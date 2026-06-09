@@ -9,7 +9,7 @@ import PackageDescription
 let package = Package(
     name: "zikzak_share_handler_ios",
     platforms: [
-        .iOS("15.5")
+        .iOS("15.6")
     ],
     products: [
         .library(
