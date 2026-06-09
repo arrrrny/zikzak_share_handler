@@ -41,6 +41,9 @@ PACKAGES=(
     "zikzak_share_handler_android"
     "zikzak_share_handler_ios"
     "zikzak_share_handler_macos"
+    "zikzak_share_handler_linux"
+    "zikzak_share_handler_web"
+    "zikzak_share_handler_windows"
     "zikzak_share_handler"
 )
 
@@ -77,11 +80,11 @@ for pkg in "${PACKAGES[@]}"; do
             fi
         fi
 
-        if [ -f "$ROOT_DIR/$pkg/ios/Models/zikzak_share_handler_ios_models.podspec" ]; then
+        if [ -f "$ROOT_DIR/$pkg/ios/zikzak_share_handler_ios_models.podspec" ]; then
             echo -e "${BLUE}Updating iOS models podspec version in $pkg to $VERSION${NC}"
-            sed -i '' "s/s\.version.*=.*/s.version          = '$VERSION'/" "$ROOT_DIR/$pkg/ios/Models/zikzak_share_handler_ios_models.podspec"
+            sed -i '' "s/s\.version.*=.*/s.version          = '$VERSION'/" "$ROOT_DIR/$pkg/ios/zikzak_share_handler_ios_models.podspec"
 
-            podspec_version=$(grep "s.version" "$ROOT_DIR/$pkg/ios/Models/zikzak_share_handler_ios_models.podspec" | sed "s/.*= *'//" | sed "s/'.*//")
+            podspec_version=$(grep "s.version" "$ROOT_DIR/$pkg/ios/zikzak_share_handler_ios_models.podspec" | sed "s/.*= *'//" | sed "s/'.*//")
             if [ "$podspec_version" != "$VERSION" ]; then
                 echo -e "${RED}Failed to update models podspec version for $pkg to $VERSION. Current version: $podspec_version${NC}"
             else
@@ -103,11 +106,11 @@ for pkg in "${PACKAGES[@]}"; do
             fi
         fi
 
-        if [ -f "$ROOT_DIR/$pkg/macos/Models/zikzak_share_handler_macos_models.podspec" ]; then
+        if [ -f "$ROOT_DIR/$pkg/macos/zikzak_share_handler_macos_models.podspec" ]; then
             echo -e "${BLUE}Updating macOS models podspec version in $pkg to $VERSION${NC}"
-            sed -i '' "s/s\.version.*=.*/s.version          = '$VERSION'/" "$ROOT_DIR/$pkg/macos/Models/zikzak_share_handler_macos_models.podspec"
+            sed -i '' "s/s\.version.*=.*/s.version          = '$VERSION'/" "$ROOT_DIR/$pkg/macos/zikzak_share_handler_macos_models.podspec"
 
-            podspec_version=$(grep "s.version" "$ROOT_DIR/$pkg/macos/Models/zikzak_share_handler_macos_models.podspec" | sed "s/.*= *'//" | sed "s/'.*//")
+            podspec_version=$(grep "s.version" "$ROOT_DIR/$pkg/macos/zikzak_share_handler_macos_models.podspec" | sed "s/.*= *'//" | sed "s/'.*//")
             if [ "$podspec_version" != "$VERSION" ]; then
                 echo -e "${RED}Failed to update models podspec version for $pkg to $VERSION. Current version: $podspec_version${NC}"
             else
@@ -129,6 +132,9 @@ convert_path_to_versioned() {
         "zikzak_share_handler_android"
         "zikzak_share_handler_ios"
         "zikzak_share_handler_macos"
+        "zikzak_share_handler_linux"
+        "zikzak_share_handler_web"
+        "zikzak_share_handler_windows"
         "zikzak_share_handler"
     )
 

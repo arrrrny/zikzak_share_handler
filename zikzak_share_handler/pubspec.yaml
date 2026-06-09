@@ -28,13 +28,10 @@ dependencies:
     sdk: flutter
   zikzak_share_handler_android: ^0.0.34
   zikzak_share_handler_ios: ^0.0.34
-  zikzak_share_handler_linux:
-    path: ../zikzak_share_handler_linux
+  zikzak_share_handler_linux: ^0.0.34
   zikzak_share_handler_macos: ^0.0.34
-  zikzak_share_handler_web:
-    path: ../zikzak_share_handler_web
-  zikzak_share_handler_windows:
-    path: ../zikzak_share_handler_windows
+  zikzak_share_handler_web: ^0.0.34
+  zikzak_share_handler_windows: ^0.0.34
   zikzak_share_handler_platform_interface: ^0.0.34
 
 dev_dependencies:
