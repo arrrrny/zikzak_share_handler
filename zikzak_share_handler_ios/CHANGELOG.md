@@ -1,5 +1,8 @@
 ## 0.0.34 - 2026-06-09
 
+* Prepare for publishing version 0.0.34
+## 0.0.34 - 2026-06-09
+
 - **SPM support**: Added Swift Package Manager support with `Package.swift`
 - **Pure Swift**: Removed Objective-C plugin shim (`ShareHandlerIosPlugin.h/.m`)
 - **Gray overlay fix**: `completeRequest` called from `openURL` completion handler so source app dismisses cleanly after host app switch

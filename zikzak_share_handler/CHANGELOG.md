@@ -1,5 +1,8 @@
 ## 0.0.34 - 2026-06-09
 
+* Prepare for publishing version 0.0.34
+## 0.0.34 - 2026-06-09
+
 - **iOS & macOS**: Added Swift Package Manager (SPM) support with proper `Package.swift` setup
 - **iOS & macOS**: Removed Objective-C plugin shim — migrated to pure Swift
 - **iOS & macOS**: Fixed share extension gray overlay / stuck dimming overlay on source app
