@@ -33,7 +33,7 @@ target 'Runner' do
   # zikzak_share_handler addition start
   target 'ShareExtension' do
     inherit! :search_paths
-    pod "zikzak_share_handler_macos_models", :path => "Flutter/ephemeral/.symlinks/plugins/zikzak_share_handler_macos/macos/Models"
+    pod "zikzak_share_handler_macos_models", :path => "Flutter/ephemeral/.symlinks/plugins/zikzak_share_handler_macos/macos"
   end
   # zikzak_share_handler addition end
   target 'RunnerTests' do

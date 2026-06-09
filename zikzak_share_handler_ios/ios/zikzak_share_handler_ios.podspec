@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zikzak_share_handler_ios'
-  s.version          = '0.0.31'
+  s.version          = '0.0.34'
   s.summary          = 'iOS implementation of the zikzak_share_handler plugin.'
   s.description      = <<-DESC
   iOS implementation of the zikzak_share_handler plugin.
                        DESC
-  s.homepage         = 'https://zikzak.wtf'
+  s.homepage         = 'https://zuzu.dev'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'ZikZak AI' => 'developer@zikzak.wtf' }
+  s.author           = { 'ZikZak AI' => 'developer@zuzu.dev' }
   s.source           = { :path => '.' }
   s.source_files = 'zikzak_share_handler_ios/Sources/zikzak_share_handler_ios/**/*.swift'
   s.dependency 'Flutter'

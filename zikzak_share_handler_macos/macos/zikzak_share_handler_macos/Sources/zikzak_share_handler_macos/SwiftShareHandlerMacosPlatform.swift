@@ -2,7 +2,9 @@ import FlutterMacOS
 import Foundation
 import zikzak_share_handler_macos_models
 
-public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler, ShareHandlerApi {
+public class ShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStreamHandler,
+    ShareHandlerApi
+{
 
     static let kEventsChannel = "wtf.zikzak.zikzak_share_handler/sharedMediaStream"
 
@@ -13,7 +15,7 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
 
     private var eventSink: FlutterEventSink? = nil
 
-    public static let instance = SwiftShareHandlerMacosPlatform()
+    public static let instance = ShareHandlerMacosPlatform()
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger: FlutterBinaryMessenger = registrar.messenger
@@ -26,7 +28,9 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
         registrar.addApplicationDelegate(instance)
     }
 
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    public func onListen(
+        withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink
+    ) -> FlutterError? {
         eventSink = events
         return nil
     }
@@ -38,12 +42,15 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
 
     public func hasMatchingSchemePrefix(url: URL?) -> Bool {
         if let url = url, let appDomain = Bundle.main.bundleIdentifier {
-            return url.absoluteString.hasPrefix("\(self.customSchemePrefix)-\(appDomain)") || url.absoluteString.hasPrefix("file://")
+            return url.absoluteString.hasPrefix("\(self.customSchemePrefix)-\(appDomain)")
+                || url.absoluteString.hasPrefix("file://")
         }
         return false
     }
 
-    public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+    public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool)
+        -> Bool
+    {
         return true
     }
 
@@ -74,7 +81,9 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
     }
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
-        if let userDefaults = notification.userInfo?[NSApplication.launchUserNotificationUserInfoKey] as? [AnyHashable: Any] {
+        if let userDefaults = notification.userInfo?[
+            NSApplication.launchUserNotificationUserInfoKey] as? [AnyHashable: Any]
+        {
             for (_, value) in userDefaults {
                 if let url = value as? URL {
                     if hasMatchingSchemePrefix(url: url) {
@@ -87,7 +96,9 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
 
     private func handleUrl(url: URL?, setInitialData: Bool) -> Bool {
         if let url = url {
-            let appGroupId = (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String) ?? "group.\(Bundle.main.bundleIdentifier!)"
+            let appGroupId =
+                (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String)
+                ?? "group.\(Bundle.main.bundleIdentifier!)"
             let userDefaults = UserDefaults(suiteName: appGroupId)
 
             var sharedMedia: SharedMedia?
@@ -99,7 +110,10 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
                 }
             } else if url.absoluteString.hasPrefix("file://") {
                 sharedMedia = SharedMedia.init(
-                    attachments: [SharedAttachment.init(path: url.absoluteString, type: SharedAttachmentType.file)],
+                    attachments: [
+                        SharedAttachment.init(
+                            path: url.absoluteString, type: SharedAttachmentType.file)
+                    ],
                     conversationIdentifier: nil,
                     content: nil,
                     speakableGroupName: nil,
@@ -111,9 +125,9 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
             }
 
             if let media = sharedMedia {
-                media.attachments?.forEach {$0.path = getAbsolutePath(for: $0.path) ?? $0.path}
+                media.attachments?.forEach { $0.path = getAbsolutePath(for: $0.path) ?? $0.path }
                 latestMedia = media
-                if (setInitialData) {
+                if setInitialData {
                     initialMedia = media
                 }
                 let map = media.toDictionary()
@@ -132,12 +146,16 @@ public class SwiftShareHandlerMacosPlatform: NSObject, FlutterPlugin, FlutterStr
         return identifier
     }
 
-    func getInitialSharedMedia(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SharedMedia? {
+    func getInitialSharedMedia(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>)
+        -> SharedMedia?
+    {
         let sharedMedia = initialMedia
         return sharedMedia
     }
 
-    func recordSentMessage(_ media: SharedMedia?, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+    func recordSentMessage(
+        _ media: SharedMedia?, error: AutoreleasingUnsafeMutablePointer<FlutterError?>
+    ) {
         // macOS: Intent donation not implemented yet
     }
 
@@ -153,8 +171,9 @@ extension URL {
         var queryStrings = [String: String]()
         for pair in query.components(separatedBy: "&") {
             let key = pair.components(separatedBy: "=")[0]
-            let value = pair
-                .components(separatedBy:"=")[1]
+            let value =
+                pair
+                .components(separatedBy: "=")[1]
                 .replacingOccurrences(of: "+", with: " ")
                 .removingPercentEncoding ?? ""
             queryStrings[key] = value

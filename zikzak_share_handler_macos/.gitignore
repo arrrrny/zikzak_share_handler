@@ -64,3 +64,5 @@ Icon?
 
 /Flutter/Generated.xcconfig
 /Flutter/flutter_export_environment.sh
+.build/
+.swiftpm/

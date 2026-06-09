@@ -1,5 +1,5 @@
-import Foundation
 import AppKit
+import Foundation
 import UniformTypeIdentifiers
 
 @available(macOS 11.0, *)
@@ -22,17 +22,19 @@ open class ShareHandlerMacosViewController: NSViewController {
         let shareExtensionAppBundleIdentifier = Bundle.main.bundleIdentifier!
 
         let lastIndexOfPoint = shareExtensionAppBundleIdentifier.lastIndex(of: ".")
-        ShareHandlerMacosViewController.hostAppBundleIdentifier = String(shareExtensionAppBundleIdentifier[..<lastIndexOfPoint!])
+        ShareHandlerMacosViewController.hostAppBundleIdentifier = String(
+            shareExtensionAppBundleIdentifier[..<lastIndexOfPoint!])
 
-        ShareHandlerMacosViewController.appGroupId = (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String) ?? "group.\(ShareHandlerMacosViewController.hostAppBundleIdentifier)"
+        ShareHandlerMacosViewController.appGroupId =
+            (Bundle.main.object(forInfoDictionaryKey: "AppGroupId") as? String)
+            ?? "group.\(ShareHandlerMacosViewController.hostAppBundleIdentifier)"
     }
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         loadIds()
         Task {
             await handleInputItems()
-            extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
         }
     }
 
@@ -42,13 +44,18 @@ open class ShareHandlerMacosViewController: NSViewController {
                 for (index, attachment) in (contents).enumerated() {
                     do {
                         if attachment.hasItemConformingToTypeIdentifier(urlContentType) {
-                            try await handleUrl(content: content, attachment: attachment, index: index)
+                            try await handleUrl(
+                                content: content, attachment: attachment, index: index)
                         } else if attachment.hasItemConformingToTypeIdentifier(fileURLType) {
-                            try await handleFiles(content: content, attachment: attachment, index: index)
+                            try await handleFiles(
+                                content: content, attachment: attachment, index: index)
                         } else if attachment.hasItemConformingToTypeIdentifier(textContentType) {
-                            try await handleText(content: content, attachment: attachment, index: index)
+                            try await handleText(
+                                content: content, attachment: attachment, index: index)
                         } else {
-                            print("Attachment not handled with registered type identifiers: \(attachment.registeredTypeIdentifiers)")
+                            print(
+                                "Attachment not handled with registered type identifiers: \(attachment.registeredTypeIdentifiers)"
+                            )
                         }
                     } catch {
                         print("[ERROR] Error handling attachment: \(error)")
@@ -59,42 +66,49 @@ open class ShareHandlerMacosViewController: NSViewController {
         }
     }
 
-    public func handleText(content: NSExtensionItem, attachment: NSItemProvider, index: Int) async throws {
+    public func handleText(content: NSExtensionItem, attachment: NSItemProvider, index: Int)
+        async throws
+    {
         let data = try await attachment.loadItem(forTypeIdentifier: textContentType, options: nil)
         if let item = data as? String {
             sharedText.append(item)
         }
     }
 
-    public func handleUrl(content: NSExtensionItem, attachment: NSItemProvider, index: Int) async throws {
+    public func handleUrl(content: NSExtensionItem, attachment: NSItemProvider, index: Int)
+        async throws
+    {
         let data = try await attachment.loadItem(forTypeIdentifier: urlContentType, options: nil)
         if let item = data as? URL {
             sharedText.append(item.absoluteString)
         }
     }
 
-    public func handleFiles(content: NSExtensionItem, attachment: NSItemProvider, index: Int) async throws {
+    public func handleFiles(content: NSExtensionItem, attachment: NSItemProvider, index: Int)
+        async throws
+    {
         let data = try await attachment.loadItem(forTypeIdentifier: fileURLType, options: nil)
         if let url = data as? URL {
             let fileName = getFileName(from: url, type: .file)
             let newFileUrl = getNewFileUrl(fileName: fileName)
             let copied = copyFile(at: url, to: newFileUrl)
-            if (copied) {
-                sharedAttachments.append(SharedAttachment.init(path: newFileUrl.absoluteString, type: .file))
+            if copied {
+                sharedAttachments.append(
+                    SharedAttachment.init(path: newFileUrl.absoluteString, type: .file))
             }
         }
     }
 
     public func getNewFileUrl(fileName: String) -> URL {
         let newFileUrl = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: ShareHandlerMacosViewController.appGroupId)!
+            .containerURL(
+                forSecurityApplicationGroupIdentifier: ShareHandlerMacosViewController.appGroupId)!
             .appendingPathComponent(fileName)
         return newFileUrl
     }
 
     public func redirectToHostApp() {
         loadIds()
-        let url = URL(string: "ShareMedia-\(ShareHandlerMacosViewController.hostAppBundleIdentifier)://\(ShareHandlerMacosViewController.hostAppBundleIdentifier)?key=\(sharedKey)")
 
         let sharedMedia = SharedMedia.init(
             attachments: sharedAttachments,
@@ -111,14 +125,28 @@ open class ShareHandlerMacosViewController: NSViewController {
         userDefaults.set(json, forKey: sharedKey)
         userDefaults.synchronize()
 
-        if let url = url {
-            NSWorkspace.shared.open(url)
+        guard
+            let url = URL(
+                string:
+                    "ShareMedia-\(ShareHandlerMacosViewController.hostAppBundleIdentifier)://\(ShareHandlerMacosViewController.hostAppBundleIdentifier)?key=\(sharedKey)"
+            )
+        else {
+            extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+            return
+        }
+
+        // Open the host app URL and call completeRequest from the completion
+        // handler so the source app only processes the dismissal after the
+        // host app has launched.
+        NSWorkspace.shared.open(url, configuration: NSWorkspace.OpenConfiguration()) {
+            [weak self] _ in
+            self?.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
         }
     }
 
     func getFileName(from url: URL, type: SharedAttachmentType) -> String {
         var name = url.lastPathComponent
-        if (name.isEmpty) {
+        if name.isEmpty {
             name = UUID().uuidString + "." + getExtension(from: url, type: type)
         }
 
@@ -141,10 +169,10 @@ open class ShareHandlerMacosViewController: NSViewController {
     func getExtension(from url: URL, type: SharedAttachmentType) -> String {
         let parts = url.lastPathComponent.components(separatedBy: ".")
         var ex: String? = nil
-        if (parts.count > 1) {
+        if parts.count > 1 {
             ex = parts.last
         }
-        if (ex == nil) {
+        if ex == nil {
             switch type {
             case .image:
                 ex = "PNG"
