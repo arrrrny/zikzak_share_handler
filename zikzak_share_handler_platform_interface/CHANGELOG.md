@@ -1,22 +1,35 @@
 ## 0.0.34 - 2026-06-09
 
-* Prepare for publishing version 0.0.34
+- Bump to align with iOS/macOS 0.0.34 release
+- No platform interface changes
+
 ## 0.0.31 - 2026-04-21
 
-* fix: UIApplication.openURL is deprecated
+- fix: UIApplication.openURL is deprecated
 
 # 0.0.6
+
 Fix problem with special characters in filename
 Update to allow for newer dart sdk version
+
 # 0.0.5
+
 Fix to decode file paths in case of platform encoded paths
 Added documentation to model attributes
+
 # 0.0.4
+
 Fix for channel sometimes receiving full SharedMedia object rather than map
+
 # 0.0.3
+
 Fix for error getting initial media
+
 # 0.0.2
+
 Updated License
 Code cleanup
+
 # 0.0.1
+
 Initial release of this plugin.

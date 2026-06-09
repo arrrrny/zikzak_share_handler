@@ -45,9 +45,9 @@ content = re.sub(r'^\s*#\s*zikzak_share_handler_\w+:\s*\n', '', content, flags=r
 # Convert versioned deps to path deps
 def to_path(match):
     pkg = match.group(1)
-    return f'{pkg}:\n    path: ../{pkg}'
+    return f'  {pkg}:\n    path: ../{pkg}'
 
-content = re.sub(r'^(  zikzak_share_handler(?:_\w+)?): \^[0-9]+\.[0-9]+\.[0-9]+$', to_path, content, flags=re.MULTILINE)
+content = re.sub(r'^  (zikzak_share_handler(?:_\w+)?): \^[0-9]+\.[0-9]+\.[0-9]+$', to_path, content, flags=re.MULTILINE)
 
 with open('$pubspec_file', 'w') as f:
     f.write(content)

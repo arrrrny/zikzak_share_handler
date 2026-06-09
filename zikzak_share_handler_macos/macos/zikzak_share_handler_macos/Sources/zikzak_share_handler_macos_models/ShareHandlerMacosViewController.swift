@@ -139,7 +139,7 @@ open class ShareHandlerMacosViewController: NSViewController {
         // handler so the source app only processes the dismissal after the
         // host app has launched.
         NSWorkspace.shared.open(url, configuration: NSWorkspace.OpenConfiguration()) {
-            [weak self] _ in
+            [weak self] _, _ in
             self?.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
         }
     }
