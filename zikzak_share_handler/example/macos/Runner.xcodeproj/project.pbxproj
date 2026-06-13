@@ -167,7 +167,6 @@
 				E3E042A92F90D9D800FB6D28 /* ShareExtension */,
 				33CC10EE2044A3C60003C045 /* Products */,
 				D73912EC22F37F3D000D13A0 /* Frameworks */,
-				AC1AB7DA714CF5EB9CDEB644 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -223,13 +222,6 @@
 				365DA07405D775F12AE421A5 /* Cocoa.framework */,
 			);
 			name = "OS X";
-			sourceTree = "<group>";
-		};
-		AC1AB7DA714CF5EB9CDEB644 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {

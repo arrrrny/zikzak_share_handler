@@ -135,35 +135,29 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
    - Click the '+' icon and select 'Add User-Defined Setting'
    - Give it the key 'CUSTOM_GROUP_ID' and the value of the app group identifier that you gave to both targets in the previous step
    - Repeat the above 2 steps for the 'Runner' target
-6. Add the following code inside `<project root>/ios/Podfile` within the `target 'Runner' do` block, and then run `pod install` inside of `<project root>/ios`.
+6. Since this plugin uses Swift Package Manager (SPM), you need to copy the required source files directly into your Share Extension target, the same way the [example app](https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler/example/ios/ShareExtension) does.
 
-```ruby
-target 'Runner' do
-  use_frameworks!
-  use_modular_headers!
+   **Why is this needed?** The Share Extension is a separate target from your main app. Under SPM, the Flutter-generated plugin package (`FlutterGeneratedPluginSwiftPackage`) depends on this plugin's package, and Xcode does not allow adding a second reference to the same SPM package without causing a duplicate identity error. Since the Runner already references it, the ShareExtension cannot. The workaround is to copy the two model source files directly into the extension target — this is safe because the extension runs as a separate process.
 
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+   Copy both of these files into your `ios/ShareExtension/` folder:
 
-  # zikzak_share_handler addition start
-  target 'ShareExtension' do
-    inherit! :search_paths
-    pod "zikzak_share_handler_ios_models", :path => ".symlinks/plugins/zikzak_share_handler_ios/ios/Models"
-  end
-  # zikzak_share_handler addition end
-end
-```
+   ```bash
+   cp .symlinks/plugins/zikzak_share_handler_ios/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/ShareHandlerIosViewController.swift ios/ShareExtension/
+   cp .symlinks/plugins/zikzak_share_handler_ios/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/SharedModels.swift ios/ShareExtension/
+   ```
 
-7. In Xcode, replace the contents of ShareExtension/ShareViewController.swift with the following code. The share extension doesn't launch a UI of its own, instead it serializes the shared content/media and saves it to the groups shared preferences, then opens a deep link into the full app so your flutter/dart code can then read the serialized data and handle it accordingly.
+   Then in Xcode, add both files to the ShareExtension target's **Compile Sources** build phase. After this, your `ios/ShareExtension/` folder should contain:
+   - `ShareHandlerIosViewController.swift` (copied from the plugin)
+   - `SharedModels.swift` (copied from the plugin)
+   - `ShareViewController.swift` (created in the next step)
+
+7. In Xcode, replace the contents of `ShareExtension/ShareViewController.swift` with the following code. The share extension doesn't launch a UI of its own, instead it serializes the shared content/media and saves it to the groups shared preferences, then opens a deep link into the full app so your flutter/dart code can then read the serialized data and handle it accordingly.
 
 ```swift
-import zikzak_share_handler_ios_models
-
 class ShareViewController: ShareHandlerIosViewController {}
 ```
 
-### Xcode 16 and IOS Trouble Shooting
-
-Before running pod install make sure to
+### iOS Troubleshooting
 
 Convert Share Extension to Group
 
@@ -172,31 +166,6 @@ Convert Share Extension to Group
 Move Thin Library to the bottom of the build phase
 
 ![Arrange Build Phases](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/thin.png)
-
-Update the ios/Runner/Release.xcconfig file as below:
-
-```bash
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
-#include "Generated.xcconfig"
-```
-
-Update the ios/Runner/Debug.xcconfig file as below:
-
-```bash
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
-#include "Generated.xcconfig"
-```
-If you receive the below warning
-
-![Warning](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/warning.png)
-
-Update the Build setting CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER for ShareExtension to '$(inherited)':
-It will set the value to $(inherited) for the ShareExtension target to 'No'.
-
-![Build Setting](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/fix.png)
-
 
 ### Android
 
@@ -390,9 +359,10 @@ class _MyAppState extends State<MyApp> {
 ```
 
 ## Attributions
+
 This package is the fork of the share_handler package https://pub.dev/packages/share_handler
 
-In the emergency case of the original package not working on IOS 18, I decided to  fork it and make the necessary changes to make it work on IOS 18 and Xcode 16.
+In the emergency case of the original package not working on IOS 18, I decided to fork it and make the necessary changes to make it work on IOS 18 and Xcode 16.
 
 Special thanks to the original author of the share_handler package - https://github.com/JoshJuncker and the contributors of the share_handler package https://github.com/ShoutSocial/share_handler
 Special thanks to the contributors of the receive_sharing_intent package from which previous author garnered a lot of code/logic and built thereon - https://github.com/KasemJaffer/receive_sharing_intent.
