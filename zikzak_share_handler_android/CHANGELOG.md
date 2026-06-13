@@ -1,3 +1,6 @@
+## 0.0.35 - 2026-06-13
+
+* Prepare for publishing version 0.0.35
 ## 0.0.31 - 2026-04-21
 
 - fix: UIApplication.openURL is deprecated
