@@ -1,26 +1,30 @@
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+plugins {
+    id("com.android.library")
+}
 
 android {
     namespace = "wtf.zikzak.zikzak_share_handler"
     compileSdk = 36
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_11
-        targetCompatibility = JavaVersion.VERSION_1_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     sourceSets {
-        main.java.srcDirs += "src/main/kotlin"
+        getByName("main") {
+            java.srcDirs("src/main/kotlin")
+        }
     }
 
     defaultConfig {
         minSdk = 16
-        targetSdk = 36
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
 
