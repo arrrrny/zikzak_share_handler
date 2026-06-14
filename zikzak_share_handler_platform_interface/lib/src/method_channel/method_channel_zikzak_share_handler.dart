@@ -16,8 +16,9 @@ import 'package:zikzak_share_handler_platform_interface/zikzak_share_handler_pla
 /// to your Flutter app through MethodChannels (Android and iOS platforms).
 class MethodChannelShareHandler extends ShareHandlerPlatform {
   final ShareHandlerApi _api = ShareHandlerApi();
-  static const EventChannel eventChannel =
-      EventChannel("wtf.zikzak.zikzak_share_handler/sharedMediaStream");
+  static const EventChannel eventChannel = EventChannel(
+    "wtf.zikzak.zikzak_share_handler/sharedMediaStream",
+  );
   static Stream<SharedMedia>? _sharedMediaStream;
 
   @override
@@ -33,12 +34,14 @@ class MethodChannelShareHandler extends ShareHandlerPlatform {
     String? conversationImageFilePath,
     String? serviceName,
   }) {
-    return _api.recordSentMessage(SharedMedia(
-      conversationIdentifier: conversationIdentifier,
-      speakableGroupName: conversationName,
-      serviceName: serviceName,
-      imageFilePath: conversationImageFilePath,
-    ));
+    return _api.recordSentMessage(
+      SharedMedia(
+        conversationIdentifier: conversationIdentifier,
+        speakableGroupName: conversationName,
+        serviceName: serviceName,
+        imageFilePath: conversationImageFilePath,
+      ),
+    );
   }
 
   @override
@@ -48,11 +51,12 @@ class MethodChannelShareHandler extends ShareHandlerPlatform {
 
   @override
   Stream<SharedMedia> get sharedMediaStream {
-    _sharedMediaStream ??=
-        eventChannel.receiveBroadcastStream().map<SharedMedia>((dynamic event) {
-      final Map<dynamic, dynamic> map = event as Map<dynamic, dynamic>;
-      return SharedMedia.decode(map);
-    });
+    _sharedMediaStream ??= eventChannel
+        .receiveBroadcastStream()
+        .map<SharedMedia>((dynamic event) {
+          final Map<dynamic, dynamic> map = event as Map<dynamic, dynamic>;
+          return SharedMedia.decode(map);
+        });
 
     return _sharedMediaStream!;
   }

@@ -151,7 +151,7 @@ class ShareHandlerApi {
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
   ShareHandlerApi({BinaryMessenger? binaryMessenger})
-      : _binaryMessenger = binaryMessenger;
+    : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
