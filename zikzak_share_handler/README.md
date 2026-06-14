@@ -142,8 +142,7 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
    Copy both of these files into your `ios/ShareExtension/` folder:
 
    ```bash
-   cp .symlinks/plugins/zikzak_share_handler_ios/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/ShareHandlerIosViewController.swift ios/ShareExtension/
-   cp .symlinks/plugins/zikzak_share_handler_ios/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/SharedModels.swift ios/ShareExtension/
+    cp ~/.pub-cache/hosted/pub.dev/zikzak_share_handler_ios-0.0.35/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/ShareHandlerIosViewController.swift ios/ShareExtension/ && cp ~/.pub-cache/hosted/pub.dev/zikzak_share_handler_ios-0.0.35/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/SharedModels.swift ios/ShareExtension/ && echo "Done"
    ```
 
    Then in Xcode, add both files to the ShareExtension target's **Compile Sources** build phase. After this, your `ios/ShareExtension/` folder should contain:
