@@ -135,26 +135,22 @@ First, add `zikzak_share_handler` as a [dependency in your pubspec.yaml file](ht
    - Click the '+' icon and select 'Add User-Defined Setting'
    - Give it the key 'CUSTOM_GROUP_ID' and the value of the app group identifier that you gave to both targets in the previous step
    - Repeat the above 2 steps for the 'Runner' target
-6. Since this plugin uses Swift Package Manager (SPM), you need to copy the required source files directly into your Share Extension target, the same way the [example app](https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler/example/ios/ShareExtension) does.
+6. Add the `zikzak-share-handler-ios-models` SPM package to your ShareExtension target:
+   - In Xcode, select your project → **ShareExtension** target → **General** tab
+   - Under **Frameworks and Libraries**, click **+**
+   - Select **zikzak-share-handler-ios-models** and click **Add**
+   - If the ShareExtension target doesn't have a **Frameworks** build phase, add one: select the target → **Build Phases** → **+** → **New Run Script Phase** is NOT needed; instead, under **Build Phases**, click **+** → **New Frameworks Build Phase**
 
-   **Why is this needed?** The Share Extension is a separate target from your main app. Under SPM, the Flutter-generated plugin package (`FlutterGeneratedPluginSwiftPackage`) depends on this plugin's package, and Xcode does not allow adding a second reference to the same SPM package without causing a duplicate identity error. Since the Runner already references it, the ShareExtension cannot. The workaround is to copy the two model source files directly into the extension target — this is safe because the extension runs as a separate process.
-
-   Copy both of these files into your `ios/ShareExtension/` folder:
-
-   ```bash
-    cp ~/.pub-cache/hosted/pub.dev/zikzak_share_handler_ios-0.0.35/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/ShareHandlerIosViewController.swift ios/ShareExtension/ && cp ~/.pub-cache/hosted/pub.dev/zikzak_share_handler_ios-0.0.35/ios/zikzak_share_handler_ios/Sources/zikzak_share_handler_ios_models/SharedModels.swift ios/ShareExtension/ && echo "Done"
-   ```
-
-   Then in Xcode, add both files to the ShareExtension target's **Compile Sources** build phase. After this, your `ios/ShareExtension/` folder should contain:
-   - `ShareHandlerIosViewController.swift` (copied from the plugin)
-   - `SharedModels.swift` (copied from the plugin)
-   - `ShareViewController.swift` (created in the next step)
-
-7. In Xcode, replace the contents of `ShareExtension/ShareViewController.swift` with the following code. The share extension doesn't launch a UI of its own, instead it serializes the shared content/media and saves it to the groups shared preferences, then opens a deep link into the full app so your flutter/dart code can then read the serialized data and handle it accordingly.
+7. Replace the contents of `ShareExtension/ShareViewController.swift` with:
 
 ```swift
+import UIKit
+import zikzak_share_handler_ios_models
+
 class ShareViewController: ShareHandlerIosViewController {}
 ```
+
+That's it! The plugin's model types (`ShareHandlerIosViewController`, `SharedMedia`, etc.) are provided via SPM — no file copying needed.
 
 ### iOS Troubleshooting
 
@@ -165,6 +161,28 @@ Convert Share Extension to Group
 Move Thin Library to the bottom of the build phase
 
 ![Arrange Build Phases](https://raw.githubusercontent.com/arrrrny/zikzak_share_handler/refs/heads/master/setup_images/thin.png)
+
+### macOS
+
+1. Create a Share Extension target in Xcode:
+   - **File** → **New** → **Target** → **Share Extension**
+   - Name it **ShareExtension**
+
+2. Add App Groups capability to both Runner and ShareExtension targets (same group ID).
+
+3. Add the `zikzak-share-handler-macos-models` SPM package to your ShareExtension target:
+   - In Xcode, select your project → **ShareExtension** target → **General** tab
+   - Under **Frameworks and Libraries**, click **+**
+   - Select **zikzak-share-handler-macos-models** and click **Add**
+
+4. Replace the contents of `ShareExtension/ShareViewController.swift` with:
+
+```swift
+import Foundation
+import zikzak_share_handler_macos_models
+
+class ShareViewController: ShareHandlerMacosViewController {}
+```
 
 ### Android
 

@@ -1,16 +1,16 @@
 name: zikzak_share_handler_windows
 description: An implementation for the Windows platform of the Flutter zikzak_share_handler plugin.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_windows
-version: 0.0.36
+version: 1.0.0
 
 environment:
-  sdk: ">=2.14.0 <4.0.0"
-  flutter: ">=2.0.0"
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  zikzak_share_handler_platform_interface: ^0.0.36
+  zikzak_share_handler_platform_interface: ^1.0.0
 
 dev_dependencies:
   flutter_lints:

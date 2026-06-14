@@ -14,7 +14,11 @@ let package = Package(
     products: [
         .library(
             name: "zikzak-share-handler-macos",
-            targets: ["zikzak_share_handler_macos"])
+            targets: ["zikzak_share_handler_macos"]),
+        .library(
+            name: "zikzak-share-handler-macos-models",
+            type: .static,
+            targets: ["zikzak_share_handler_macos_models"]),
     ],
     dependencies: [],
     targets: [

@@ -1,9 +1,20 @@
+## 1.0.0 - 2026-06-14
+
+* Prepare for publishing version 1.0.0
+## 1.0.0 - 2026-06-14
+
+- Expose `zikzak-share-handler-macos-models` as a public SPM product for ShareExtension targets
+- Remove CocoaPods `#include` references from example xcconfig files
+- Example: switch from embedded source files to SPM product dependency
+
 ## 0.0.36 - 2026-06-14
 
-* Prepare for publishing version 0.0.36
+- Prepare for publishing version 0.0.36
+
 ## 0.0.35 - 2026-06-13
 
-* Prepare for publishing version 0.0.35
+- Prepare for publishing version 0.0.35
+
 ## 0.0.34 - 2026-06-09
 
 - **SPM support**: Added Swift Package Manager support with `Package.swift`

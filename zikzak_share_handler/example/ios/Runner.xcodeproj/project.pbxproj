@@ -11,8 +11,6 @@
 		26CE8CFA2876222C00AD5541 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CE8CF92876222C00AD5541 /* ShareViewController.swift */; };
 		26CE8CFD2876222C00AD5541 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26CE8CFB2876222C00AD5541 /* MainInterface.storyboard */; };
 		26CE8D012876222C00AD5541 /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 26CE8CF72876222C00AD5541 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		26CE8D0B287622C00AD5555 /* ShareHandlerIosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CE8D0C287622C00AD5556 /* ShareHandlerIosViewController.swift */; };
-		26CE8D0D287622C00AD5557 /* SharedModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CE8D0E287622C00AD5558 /* SharedModels.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
@@ -64,8 +62,6 @@
 		26CE8CFC2876222C00AD5541 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		26CE8CFE2876222C00AD5541 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		26CE8D06287626E300AD5541 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
-		26CE8D0C287622C00AD5556 /* ShareHandlerIosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareHandlerIosViewController.swift; sourceTree = "<group>"; };
-		26CE8D0E287622C00AD5558 /* SharedModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModels.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,8 +106,6 @@
 				26CE8CF92876222C00AD5541 /* ShareViewController.swift */,
 				26CE8CFB2876222C00AD5541 /* MainInterface.storyboard */,
 				26CE8CFE2876222C00AD5541 /* Info.plist */,
-				26CE8D0C287622C00AD5556 /* ShareHandlerIosViewController.swift */,
-				26CE8D0E287622C00AD5558 /* SharedModels.swift */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -179,6 +173,9 @@
 			dependencies = (
 			);
 			name = ShareExtension;
+			packageProductDependencies = (
+				E3550E702F8FF0000019F5F4 /* zikzak-share-handler-ios-models */,
+			);
 			productName = ShareExtension;
 			productReference = 26CE8CF72876222C00AD5541 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -311,8 +308,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				26CE8CFA2876222C00AD5541 /* ShareViewController.swift in Sources */,
-				26CE8D0B287622C00AD5555 /* ShareHandlerIosViewController.swift in Sources */,
-				26CE8D0D287622C00AD5557 /* SharedModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,6 +759,10 @@
 			productName = FlutterGeneratedPluginSwiftPackage;
 		};
 /* End XCSwiftPackageProductDependency section */
+		E3550E702F8FF0000019F5F4 /* zikzak-share-handler-ios-models */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "zikzak-share-handler-ios-models";
+		};
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }

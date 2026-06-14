@@ -1,3 +1,6 @@
+## 1.0.0 - 2026-06-14
+
+* Prepare for publishing version 1.0.0
 ## 0.0.36 - 2026-06-14
 
 * Prepare for publishing version 0.0.36

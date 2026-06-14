@@ -305,6 +305,9 @@
 			dependencies = (
 			);
 			name = ShareExtension;
+			packageProductDependencies = (
+				E3550E602F8FF0000019F5F4 /* zikzak-share-handler-macos-models */,
+			);
 			productName = ShareExtension;
 			productReference = E3E0428F2F90D9CD00FB6D28 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -875,10 +878,6 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OTHER_LDFLAGS = (
-					"-framework",
-					zikzak_share_handler_macos_models,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = wtf.zikzak.zikzakShareHandlerExample.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -938,10 +937,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				OTHER_LDFLAGS = (
-					"-framework",
-					zikzak_share_handler_macos_models,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = wtf.zikzak.zikzakShareHandlerExample.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1000,10 +995,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				OTHER_LDFLAGS = (
-					"-framework",
-					zikzak_share_handler_macos_models,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = wtf.zikzak.zikzakShareHandlerExample.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1083,6 +1074,10 @@
 			productName = FlutterGeneratedPluginSwiftPackage;
 		};
 /* End XCSwiftPackageProductDependency section */
-	};
-	rootObject = 33CC10E52044A3C60003C045 /* Project object */;
+			E3550E602F8FF0000019F5F4 /* zikzak-share-handler-macos-models */ = {
+				isa = XCSwiftPackageProductDependency;
+				productName = "zikzak-share-handler-macos-models";
+			};
+		};
+		rootObject = 33CC10E52044A3C60003C045 /* Project object */;
 }
