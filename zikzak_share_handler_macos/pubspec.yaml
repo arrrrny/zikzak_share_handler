@@ -1,7 +1,7 @@
 name: zikzak_share_handler_macos
 description: An implementation for the macOS platform of the Flutter zikzak_share_handler plugin.
 repository: https://github.com/arrrrny/zikzak_share_handler/tree/main/zikzak_share_handler_macos
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.12.0

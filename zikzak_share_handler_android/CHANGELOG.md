@@ -1,12 +1,20 @@
+## 1.0.1 - 2026-07-10
+
+- Update minimum macOS target to 12.0
+- Update SPM configuration
+
 ## 1.0.0 - 2026-06-14
 
-* Prepare for publishing version 1.0.0
+- Prepare for publishing version 1.0.0
+
 ## 0.0.36 - 2026-06-14
 
-* Prepare for publishing version 0.0.36
+- Prepare for publishing version 0.0.36
+
 ## 0.0.35 - 2026-06-13
 
-* Prepare for publishing version 0.0.35
+- Prepare for publishing version 0.0.35
+
 ## 0.0.31 - 2026-04-21
 
 - fix: UIApplication.openURL is deprecated

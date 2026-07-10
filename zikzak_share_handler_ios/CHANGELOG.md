@@ -1,6 +1,12 @@
+## 1.0.1 - 2026-07-10
+
+- Update minimum macOS target to 12.0
+- Update SPM configuration
+
 ## 1.0.0 - 2026-06-14
 
-* Prepare for publishing version 1.0.0
+- Prepare for publishing version 1.0.0
+
 ## 1.0.0 - 2026-06-14
 
 - Expose `zikzak-share-handler-ios-models` as a public SPM product for ShareExtension targets
